@@ -61,6 +61,12 @@ Copy `G:\锅师\.workbuddy\memory\MEMORY.md` → `G:\锅师\config\project-memor
 
 Copy `G:\锅师\.workbuddy\PERSONA.md` → `G:\锅师\config\PERSONA.md`.
 
+### Step 2.6 — Mirror Identity Files
+
+Copy `~/.workbuddy/SOUL.md` → `G:\锅师\config\SOUL.md`.
+
+Copy `~/.workbuddy/IDENTITY.md` → `G:\锅师\config\IDENTITY.md`.
+
 ### Step 3 — Git Commit & Push
 
 ```bash
