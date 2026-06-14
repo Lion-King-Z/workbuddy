@@ -5,19 +5,20 @@
 ## 结构
 
 ```
-├── .gitignore          # 排除业务内容（浑水调研/、深度研究/ 等）
-├── config/
-│   ├── MEMORY.md       # 全局记忆（IMA同步规则、人设偏好、项目结构等）
-│   └── skills/         # 27 个自建 Skill
-│       ├── 浑水电话会深度分析/  # 电话会→瓶颈→景气度→信源→IMA沉淀
-│       ├── 产业链瓶颈投研skill/ # 供给刚性+不可替代性+价格传导
-│       ├── 国策主题投研/       # 昊天意志三层映射法
-│       ├── 信源检查/           # A/B/C/D/E 五级信源分级
-│       ├── 选金/               # 信息沉淀价值筛选
-│       ├── 每日投研推送/       # 降噪→10-20条信号推送
-│       ├── 每周研判/           # 一周全局信号变化报告
-│       ├── git-sync/           # 自动同步本仓库
-│       └── ...
+config/
+├── MEMORY.md           # 全局记忆（IMA同步规则、人设偏好等）
+├── project-memory.md   # 项目规则（宏观跟踪指标、文件结构、信息源体系）
+├── PERSONA.md          # 锅师人设
+└── skills/             # 27 个自建 Skill
+    ├── 浑水电话会深度分析/   # 电话会→瓶颈→景气度→信源→IMA沉淀
+    ├── 产业链瓶颈投研skill/  # 供给刚性+不可替代性+价格传导
+    ├── 国策主题投研/        # 昊天意志三层映射法
+    ├── 信源检查/            # A/B/C/D/E 五级信源分级
+    ├── 选金/                # 信息沉淀价值筛选
+    ├── 每日投研推送/        # 降噪→10-20条信号推送
+    ├── 每周研判/            # 一周全局信号变化报告
+    ├── git-sync/            # 自动同步本仓库
+    └── ...
 ```
 
 ## 同步策略
@@ -31,5 +32,7 @@
 ```bash
 git clone https://github.com/Lion-King-Z/workbuddy.git
 cp config/MEMORY.md ~/.workbuddy/MEMORY.md
+cp config/project-memory.md <项目>/.workbuddy/memory/MEMORY.md
+cp config/PERSONA.md <项目>/.workbuddy/PERSONA.md
 cp -r config/skills/* ~/.workbuddy/skills/
 ```
