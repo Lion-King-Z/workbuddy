@@ -23,16 +23,12 @@ Execute automatically after:
 ## Repository Structure
 
 ```
-G:\锅师\
-├── .gitignore          # Excludes: 业务内容(浑水调研/ 深度研究/), .workbuddy/, 年报, 聚宝盆索引
-├── config/
-│   ├── MEMORY.md       # Copy of ~/.workbuddy/MEMORY.md
-│   └── skills/         # Self-built skills only (no marketplace skill_* dirs)
-│       └── <skill-name>/SKILL.md
-├── 浑水调研/           # Ignored by git
-├── 深度研究/           # Ignored by git
-└── ...
-```
+config/
+├── MEMORY.md           # Copy of ~/.workbuddy/MEMORY.md (global)
+├── project-memory.md   # Copy of G:\锅师\.workbuddy\memory\MEMORY.md (project rules)
+├── PERSONA.md          # Copy of G:\锅师\.workbuddy\PERSONA.md (persona)
+└── skills/             # Self-built skills only (no marketplace skill_* dirs)
+    └── <skill-name>/
 
 Remote: `https://github.com/Lion-King-Z/workbuddy.git` (branch: main)
 
@@ -58,6 +54,12 @@ For each skill directory, copy the entire subtree to `G:\锅师\config\skills/<n
 ### Step 2 — Mirror Global Memory
 
 Copy `~/.workbuddy/MEMORY.md` → `G:\锅师\config\MEMORY.md`.
+
+### Step 2.5 — Mirror Project Memory & Persona
+
+Copy `G:\锅师\.workbuddy\memory\MEMORY.md` → `G:\锅师\config\project-memory.md`.
+
+Copy `G:\锅师\.workbuddy\PERSONA.md` → `G:\锅师\config\PERSONA.md`.
 
 ### Step 3 — Git Commit & Push
 
