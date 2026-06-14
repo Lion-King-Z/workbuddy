@@ -9,6 +9,8 @@ config/
 ├── MEMORY.md           # 全局记忆（IMA同步规则、人设偏好等）
 ├── project-memory.md   # 项目规则（宏观跟踪指标、文件结构、信息源体系）
 ├── PERSONA.md          # 锅师人设
+├── SOUL.md             # 锅师之魂
+├── IDENTITY.md         # 身份记录
 └── skills/             # 27 个自建 Skill
     ├── 浑水电话会深度分析/   # 电话会→瓶颈→景气度→信源→IMA沉淀
     ├── 产业链瓶颈投研skill/  # 供给刚性+不可替代性+价格传导
