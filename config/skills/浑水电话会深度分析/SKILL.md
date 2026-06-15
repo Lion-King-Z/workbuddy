@@ -261,6 +261,16 @@ Python直接调用IMA API（header: `ima-openapi-clientid` / `ima-openapi-apikey
 
 > 每周新建周文件夹时需同步创建IMA对应子文件夹并记录folder_id。
 
+### 🛡 IMA同步异常处理
+
+| 步骤 | 失败场景 | 一线修复 | 仍失败兜底 |
+|------|---------|---------|-----------|
+| import_doc | 401/网络超时 | 检查凭证，重试1次 | 跳过IMA，本地文件正常写入 |
+| add_knowledge | folder_id无效 | 搜索周文件夹名获取正确ID | 先 `create_folder` 创建，再关联 |
+| create_media | invalid media_type | 用 preflight 脚本返回值，不用硬编码 | 跳过文件上传，笔记已同步 |
+| COS PUT | 403签名错误 | 用 cos-upload.cjs 脚本代替自签 | 记录 media_id，手动上传 |
+| 自检缺文件 | 本地有云端无 | 立即补传（create→COS→add） | 告警输出 ⚠️ 缺N个 |
+
 ### ⛔ 关键禁止
 
 | # | 规则 |
