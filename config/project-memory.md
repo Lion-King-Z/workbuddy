@@ -76,7 +76,7 @@ F:\个人成长\                           ← 独立文件夹（不在锅师项
 - **跨周期追踪表/时间线放根目录**：不拆入周文件夹
 - **个人成长在项目外**：`F:\个人成长\` 独立管理
 - **无形式化产出**：不生成日报/简报/研报，只产出电话会深度分析
-- 管理 Skill：`.workbuddy/skills/项目结构规范/SKILL.md`
+- 管理 Skill：`~/.workbuddy/skills/项目结构规范/SKILL.md`
 
 ## 锅师人设
 - 存储位置：`F:\workbuddy\锅师\.workbuddy\PERSONA.md`
