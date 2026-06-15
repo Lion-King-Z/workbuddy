@@ -250,6 +250,11 @@ Python直接调用IMA API（header: `ima-openapi-clientid` / `ima-openapi-apikey
 |---|------|
 | 🆕 | `add_knowledge` 禁止缺 `folder_id` —— 会导致笔记散落根目录 |
 | 🆕 | 文件命名禁止 `电话会_日期_...` 格式 —— 统一 `日期_电话会_...` |
+| 🆕 | 产出后必须自检：对比本地md vs IMA文件夹内容，缺文件立即补传 |
+
+### 🔍 产出后自检（每次电话会分析完成后自动执行）
+
+对比 `浑水调研/<周文件夹>/` 本地 .md 文件 ↔ IMA对应 `folder_id` 下 `media_type=7` 的文件。缺则补传，不需要等老大提醒。
 
 ---
 
