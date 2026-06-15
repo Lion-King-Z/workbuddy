@@ -133,6 +133,48 @@ resp = api("create_folder", {
 target_id = resp["data"]["media_id"]
 ```
 
+### Step 0.5：上传前预检（⛔ create_media 之前强制执行）
+
+**IMA API 无法删除文件。上传到错误文件夹后不可逆，老大需手动到IMA客户端删除。所以必须在 create_media 之前就锁定正确目标。**
+
+```python
+from datetime import date, timedelta
+import re
+
+# 1. 从文件名提取日期，计算正确周文件夹
+filename = "2026-06-15_电话会_磷化铟光芯片.md"
+match = re.match(r"(\d{4}-\d{2}-\d{2})_", filename)
+assert match, "❌ 文件名无日期前缀，🛑 禁止上传！"
+file_date = date.fromisoformat(match.group(1))
+week_start = file_date - timedelta(days=file_date.weekday())
+week_end = week_start + timedelta(days=6)
+correct_week = f"{week_start:%m%d}-{week_end:%m%d}"
+
+# 2. 确认 target_week_folder_name 就是 correct_week
+assert correct_week == target_week_folder_name, \
+    f"❌ IMA目标周文件夹错误！文件日期={file_date}，正确周={correct_week}，实际目标={target_week_folder_name}"
+# → 🛑 阻断上传，修正 TARGET_FOLDER_ID 后重试
+
+# 3. 确认目标周文件夹在IMA中存在（不存在则创建）
+# 在父文件夹下搜索
+resp = search_knowledge(kb_id, correct_week, folder_id=parent_folder_id)
+if not found:
+    resp = create_folder(kb_id, correct_week, folder_id=parent_folder_id)  # ← 必须带 folder_id！
+    assert resp["code"] == 0, f"❌ IMA文件夹创建失败: {correct_week}"
+
+# 4. 输出预检结果
+print(f"""
+🔍 IMA上传预检 — {filename}
+├── 文件名日期: {file_date} → 正确周: {correct_week}
+├── 目标 folder_id: {TARGET_FOLDER_ID}
+├── 周文件夹匹配: ✅
+└── IMA文件夹就绪: ✅
+预检通过 → 允许执行 create_media。
+""")
+```
+
+**预检不通过 = 🛑 阻断上传链。先修正 target 变量，绝不用错误 folder_id 调 create_media。**
+
 ### Step 3：执行文件上传流程
 
 按照 IMA skill 的标准文件上传流程：
@@ -178,14 +220,6 @@ node "$SKILL_DIR/knowledge-base/scripts/cos-upload.cjs" \
 
 ```bash
 node "$SKILL_DIR/ima_api.cjs" "openapi/wiki/v1/add_knowledge" "{\"media_type\":$MEDIA_TYPE,\"media_id\":\"$MEDIA_ID\",\"title\":\"$FILE_NAME\",\"knowledge_base_id\":\"$KB_ID\",\"folder_id\":\"$TARGET_FOLDER_ID\",\"file_info\":{\"cos_key\":\"$COS_KEY\",\"file_size\":$FILE_SIZE,\"file_name\":\"$FILE_NAME\"}}" "$OPTS"
-```
-
-### Step 4：验证
-
-上传完成后，通过 `get_knowledge_list` 验证文件确实在预期文件夹中：
-
-```bash
-node "$SKILL_DIR/ima_api.cjs" "openapi/wiki/v1/get_knowledge_list" "{\"knowledge_base_id\":\"$KB_ID\",\"folder_id\":\"$TARGET_FOLDER_ID\",\"cursor\":\"\",\"limit\":50}" "$OPTS"
 ```
 
 ## 常见错误处理

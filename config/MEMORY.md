@@ -41,3 +41,4 @@
 
 **⛔ search_knowledge API 返回字段**：`info_list` + `title`（不是 media_list + name）
 **⛔ create_folder 必须传 `folder_id`**：否则创建到根目录！
+**⛔ 周文件夹**：根据电话会日期自动计算（周一MMDD-周日MMDD），不硬编码

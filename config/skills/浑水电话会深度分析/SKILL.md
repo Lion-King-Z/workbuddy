@@ -38,7 +38,24 @@ G:\锅师\
 └── 年报_YYYY.md
 ```
 
-### 电话会存储策略
+### 周文件夹自动判定
+
+根据电话会日期自动计算目标周文件夹（周一MMDD-周日MMDD）：
+
+```python
+from datetime import date, timedelta
+d = date(2026, 6, 15)  # 电话会日期
+monday = d - timedelta(days=d.weekday())
+sunday = monday + timedelta(days=6)
+week_dir = f"{monday.strftime('%m%d')}-{sunday.strftime('%m%d')}"
+# → "0615-0621"
+```
+
+**本地**：`<项目根>/浑水调研/<周文件夹>/`，目录不存在则 `mkdir -p` 创建。
+
+**IMA**：先检查周文件夹是否已存在（`search_knowledge` 搜文件夹名），不存在则通过 `create_folder` 创建并记录 `folder_id` 到映射表。
+
+### 文件命名与存储
 
 | 文件 | 用途 | 格式 |
 |------|------|------|
@@ -250,11 +267,31 @@ Python直接调用IMA API（header: `ima-openapi-clientid` / `ima-openapi-apikey
 |---|------|
 | 🆕 | `add_knowledge` 禁止缺 `folder_id` —— 会导致笔记散落根目录 |
 | 🆕 | 文件命名禁止 `电话会_日期_...` 格式 —— 统一 `日期_电话会_...` |
-| 🆕 | 产出后必须自检：对比本地md vs IMA文件夹内容，缺文件立即补传 |
+| 🆕 | 落盘前必须预检：从文件名算周文件夹 → 确认本地+IMA目标路径正确 → 才Write/Upload。IMA无法删文件，错了不可逆 |
 
-### 🔍 产出后自检（每次电话会分析完成后自动执行，跨设备通用）
+### 🔍 落盘前预检（每次电话会分析 Write 前 + IMA Upload 前执行）
 
-自检不依赖硬编码路径，用当前项目根目录动态定位：
+**⛔ IMA API 无法删除文件。上传到错误文件夹后不可逆。必须预检，不是后检。**
+
+#### 预检A：写本地文件前 — 锁定正确目标路径
+
+```
+对每个新产出文件：
+1. 从文件名提取日期（YYYY-MM-DD）→ 计算正确周文件夹（MMDD-MMDD）
+2. 确认目标写入路径 = 浑水调研/<正确周文件夹>/文件名.md
+3. 路径含错误周文件夹 → 🛑 阻断Write，修正target变量
+4. 预检通过 → 确保文件夹存在 → Write
+```
+
+#### 预检B：上传IMA前 — 锁定正确 folder_id
+
+```
+1. 确认 target_folder_id 对应的周文件夹名 = 文件名日期计算出的正确周文件夹
+2. 不一致 → 🛑 阻断 create_media，修正 folder_id 变量
+3. 预检通过 → 执行 create_media → COS upload → add_knowledge(folder_id=<已验证的ID>)
+```
+
+#### 预检C：上传完成后 — 数量对比（这是唯一可做后检的环节）
 
 ```
 1. 列出 <项目根>/浑水调研/<周文件夹>/ 所有 .md 文件
@@ -264,7 +301,7 @@ Python直接调用IMA API（header: `ima-openapi-clientid` / `ima-openapi-apikey
 5. 缺的立即补传（create_media → COS → add_knowledge）
 ```
 
-**folder_id 映射表**（云端固定，跨设备不变）：
+**folder_id 映射表**（云端固定，跨设备不变。新周自动追加）：
 
 | 本地相对路径 | IMA folder_id |
 |-------------|--------------|
@@ -273,7 +310,7 @@ Python直接调用IMA API（header: `ima-openapi-clientid` / `ima-openapi-apikey
 | 深度研究/0608-0614/ | `folder_7471884144738839` |
 | 深度研究/0615-0621/ | `folder_7472132342687156` |
 
-> 新周文件夹需要同步在IMA创建对应子文件夹，并记录新folder_id到本表。
+> ⚠️ IMA `create_folder` API: `POST /openapi/wiki/v1/create_folder`，参数 `{title, knowledge_base_id, folder_id}`。`folder_id` 为上级文件夹ID（浑水调研根 = `folder_7471884757106786`，深度研究根 = `folder_7471884144740883`）。**缺 `folder_id` 则创建到根目录！**
 
 ---
 
