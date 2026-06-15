@@ -1,0 +1,21 @@
+{
+  "name": "国策主题投研",
+  "description": "基于昊天意志框架的国家战略主题研究工具。从国家政策源头出发，分层识别核心支持行业，进行题材映射和产业链拆解。核心理念：先题材后选股。",
+  "version": "1.0.0",
+  "agent_created": true,
+  "created_at": "2026-06-07",
+  "trigger_keywords": [
+    "昊天意志",
+    "国家支持行业",
+    "国策主题",
+    "政策驱动",
+    "十五五主线",
+    "先题材后选股",
+    "国家发展方向"
+  ],
+  "dependencies": {
+    "skills": ["产业链瓶颈投研skill", "宏观数据监控"],
+    "connectors": ["ima-mcp"],
+    "tools": ["WebSearch", "WebFetch"]
+  }
+}

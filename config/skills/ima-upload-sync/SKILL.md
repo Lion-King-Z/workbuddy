@@ -17,13 +17,85 @@ agent_created: true
 
 ## 核心常量
 
-| 项 | 值 |
-|------|------|
-| 聚宝盆 KB_ID | `9P9LfmFJRFwLidUrzKQu0cZZ5QMVxtv61QA9iFoV90g=` |
-| 深度研究 文件夹 ID | `folder_7471884144740883` |
-| 浑水调研 文件夹 ID | `folder_7471884757106786` |
+| 项 | 值 | 状态 |
+|------|------|------|
+| 聚宝盆 KB_ID | `9P9LfmFJRFwLidUrzKQu0cZZ5QMVxtv61QA9iFoV90g=` | ✅ 有效 |
+| 深度研究 文件夹 ID | `folder_7471884144740883` | ✅ 有效（2026-06-15 确认） |
+| 浑水调研 文件夹 ID | `folder_7471884757106786` | ✅ 有效（2026-06-15 确认） |
+| 0615-0621（深度研究下） | `folder_7472132342687156` | ✅ 当前周 |
+| 0615-0621（浑水调研下） | `folder_7472255344848188` | ✅ 当前周 |
+
+### ⛔ 文件夹搜索铁律
+
+**search_knowledge API 返回结构**（不是 `media_list`！）：
+
+```json
+{
+  "data": {
+    "info_list": [  // ← 字段名是 info_list，不是 media_list
+      {
+        "media_id": "folder_xxx",
+        "title": "深度研究",       // ← 字段名是 title，不是 name
+        "media_type": 99,          // ← 99 表示文件夹
+        "parent_folder_id": "xxx"
+      }
+    ]
+  }
+}
+```
+
+**查找文件夹的正确代码**：
+```python
+def find_folder(name):
+    resp = api("openapi/wiki/v1/search_knowledge", {
+        "knowledge_base_id": KB_ID, "query": name, "limit": 50
+    })
+    for m in resp["data"]["info_list"]:  # ← info_list!
+        if m["media_type"] == 99 and m["title"] == name:  # ← title!
+            return m["media_id"]
+    return None
+```
+
+### ⛔ create_folder 必须传 folder_id
+
+**创建子文件夹时 `folder_id` 参数必须传父文件夹ID**，否则创建到根目录！
+
+```python
+# ✅ 正确：创建 深度研究/0615-0621
+api("create_folder", {
+    "knowledge_base_id": KB_ID,
+    "name": "0615-0621",
+    "folder_id": "folder_7471884144740883"  # ← 深度研究的ID
+})
+
+# ❌ 错误：漏掉 folder_id → 创建到根目录
+api("create_folder", {
+    "knowledge_base_id": KB_ID,
+    "name": "0615-0621"
+    # ↑ 缺少 folder_id！
+})
+```
 
 ## 工作流
+
+### Step 0（前置）：确定当前周文件夹
+
+**每次操作前先根据今天日期计算所属周文件夹，禁止使用上周文件夹。**
+
+```python
+from datetime import date
+today = date.today()  # 获取当天日期
+# 周文件夹格式 MMDD-MMDD，从周一起算
+# 例：2026-06-15（周一）→ 0615-0621
+week_start = today - timedelta(days=today.weekday())
+week_end = week_start + timedelta(days=6)
+week_folder = f"{week_start:%m%d}-{week_end:%m%d}"
+```
+
+检查清单：
+1. ✅ 今天日期 → 计算对应周文件夹名
+2. ✅ 本地 `深度研究/{周文件夹}/` 和 `浑水调研/{周文件夹}/` 是否存在？不存在则创建
+3. ✅ IMA 聚宝盆中是否有同名文件夹？没有则先 `create_folder`
 
 ### Step 1：确定上传路径
 
@@ -38,24 +110,27 @@ agent_created: true
 
 ### Step 2：检查文件夹路径并创建
 
-```bash
-# 获取文件夹下已有内容
-SKILL_DIR="C:/Users/Administrator/.workbuddy/skills/ima-skill"
-KB_ID="9P9LfmFJRFwLidUrzKQu0cZZ5QMVxtv61QA9iFoV90g="
-FOLDER_ID="folder_7471884144740883"  # 父文件夹ID
-IMA_OPENAPI_CLIENTID=$(cat ~/.config/ima/client_id)
-IMA_OPENAPI_APIKEY=$(cat ~/.config/ima/api_key)
-OPTS=$(printf '{"clientId":"%s","apiKey":"%s"}' "$IMA_OPENAPI_CLIENTID" "$IMA_OPENAPI_APIKEY")
+**使用 `search_knowledge` API 查找子文件夹，返回字段是 `info_list` + `title`。**
 
-# 查找目标子文件夹是否存在
-node "$SKILL_DIR/ima_api.cjs" "openapi/wiki/v1/get_knowledge_list" "{\"knowledge_base_id\":\"$KB_ID\",\"folder_id\":\"$FOLDER_ID\",\"cursor\":\"\",\"limit\":50}" "$OPTS"
+```python
+# 查找目标子文件夹
+resp = api("search_knowledge", {"knowledge_base_id": KB_ID, "query": "0615-0621", "limit": 50})
+target_id = None
+for m in resp["data"]["info_list"]:  # ← 字段名
+    if m["media_type"] == 99 and m["title"] == "0615-0621" \  # ← 字段名
+       and m.get("parent_folder_id") == deep_parent_id:
+        target_id = m["media_id"]
+        break
 ```
 
-**从返回的 `knowledge_list` 中查找 `media_type=99` 且 `title` 匹配目标周文件夹名的条目。** 如果找到，记录其 `media_id` 作为目标文件夹 ID。如果未找到，调用 `create_folder` API 创建：
-
-```bash
-node "$SKILL_DIR/ima_api.cjs" "openapi/wiki/v1/create_folder" "{\"knowledge_base_id\":\"$KB_ID\",\"folder_id\":\"$FOLDER_ID\",\"name\":\"0615-0621\"}" "$OPTS"
-# 返回的 media_id 即为新创建的文件夹 ID
+如果未找到，调用 `create_folder`（**必须传 `folder_id` 参数指定父文件夹**）：
+```python
+resp = api("create_folder", {
+    "knowledge_base_id": KB_ID,
+    "name": "0615-0621",
+    "folder_id": deep_parent_id  # ← 必须传！
+})
+target_id = resp["data"]["media_id"]
 ```
 
 ### Step 3：执行文件上传流程
