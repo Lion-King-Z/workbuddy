@@ -25,7 +25,11 @@
 3. `create_media` → COS PUT(sha1签名+token) → `add_knowledge(media_type=7, folder_id=周文件夹ID)` 同步md原文件
 4. 更新 浑水跟踪_YYYY-MM.md / 聚宝盆索引.md
 
-### 聚宝盆文件夹映射
-- 浑水调研: `folder_7471884757106786`
-- 浑水调研/0608-0614: `folder_7471884761303597`
-- 深度研究: `folder_7471884144740883`
+### 聚宝盆文件夹映射（2026-06-15 全量确认有效）
+- 浑水调研: `folder_7471884757106786` ✅
+- 深度研究: `folder_7471884144740883` ✅
+- 深度研究/0615-0621: `folder_7472132342687156`
+- 浑水调研/0615-0621: `folder_7472255344848188`
+
+**⛔ search_knowledge API 返回字段**：`info_list` + `title`（不是 media_list + name）
+**⛔ create_folder 必须传 `folder_id`**：否则创建到根目录！

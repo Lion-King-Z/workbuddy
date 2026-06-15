@@ -1,0 +1,6 @@
+timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
+2026-06-07T21:10	52041d2	信源检查	84.3	92.2	keep	dim④+dim③	checkpoints + failure fallback table	dry_run
+2026-06-07T21:27	c2808ae	国策主题投研	77.2	86.5	keep	dim①+④+⑨+⑥	frontmatter+checkpoints+blacklist+resources drawer	dry_run
+2026-06-14T21:25	baseline	每日投研推送	-	80.0	baseline	-	初始评估	dry_run
+2026-06-14T21:28	r1	每日投研推送	80.0	86.0	keep	dim④+dim③	Step5验证检查点(✅/❌) + 沉淀失败fallback 2条	dry_run
+2026-06-14T21:29	r2	每日投研推送	86.0	88.0	keep	dim⑥+dim⑤	新增依赖声明章节 + IMA API 5步流程具体化	dry_run
