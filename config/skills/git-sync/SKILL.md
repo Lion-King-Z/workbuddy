@@ -11,7 +11,7 @@ agent_created: true
 
 # Git Sync Skill
 
-Sync self-built WorkBuddy skills and global memory to the Git repository at `G:\锅师`.
+Sync self-built WorkBuddy skills and global memory to the Git repository at `F:\workbuddy\锅师`.
 
 ## When to Execute
 
@@ -25,8 +25,8 @@ Execute automatically after:
 ```
 config/
 ├── MEMORY.md           # Copy of ~/.workbuddy/MEMORY.md (global)
-├── project-memory.md   # Copy of G:\锅师\.workbuddy\memory\MEMORY.md (project rules)
-├── PERSONA.md          # Copy of G:\锅师\.workbuddy\PERSONA.md (persona)
+├── project-memory.md   # Copy of F:\workbuddy\锅师\.workbuddy\memory\MEMORY.md (project rules)
+├── PERSONA.md          # Copy of F:\workbuddy\锅师\.workbuddy\PERSONA.md (persona)
 └── skills/             # Self-built skills only (no marketplace skill_* dirs)
     └── <skill-name>/
 
@@ -34,7 +34,7 @@ Remote: `https://github.com/Lion-King-Z/workbuddy.git` (branch: main)
 
 ## Self-Built Skill Identification
 
-Self-built skills are those in `~/.workbuddy/skills/` whose directory names do NOT start with `skill_` (which are marketplace-installed). Project-level skills in `G:\锅师\.workbuddy\skills/` are also self-built.
+Self-built skills are those in `~/.workbuddy/skills/` whose directory names do NOT start with `skill_` (which are marketplace-installed). Project-level skills in `F:\workbuddy\锅师\.workbuddy\skills/` are also self-built.
 
 Exclude the following:
 - Directories named `skill_<digits>`
@@ -44,33 +44,33 @@ Exclude the following:
 
 ### Step 1 — Mirror Self-Built Skills
 
-Clear `G:\锅师\config\skills\`, then copy every self-built skill directory from both sources:
+Clear `F:\workbuddy\锅师\config\skills\`, then copy every self-built skill directory from both sources:
 
 **Source 1** — User-level: `~/.workbuddy/skills/*` (directories only, skip skill_* prefix)
-**Source 2** — Project-level: `G:\锅师\.workbuddy\skills/*` (directories only)
+**Source 2** — Project-level: `F:\workbuddy\锅师\.workbuddy\skills/*` (directories only)
 
-For each skill directory, copy the entire subtree to `G:\锅师\config\skills/<name>/`.
+For each skill directory, copy the entire subtree to `F:\workbuddy\锅师\config\skills/<name>/`.
 
 ### Step 2 — Mirror Global Memory
 
-Copy `~/.workbuddy/MEMORY.md` → `G:\锅师\config\MEMORY.md`.
+Copy `~/.workbuddy/MEMORY.md` → `F:\workbuddy\锅师\config\MEMORY.md`.
 
 ### Step 2.5 — Mirror Project Memory & Persona
 
-Copy `G:\锅师\.workbuddy\memory\MEMORY.md` → `G:\锅师\config\project-memory.md`.
+Copy `F:\workbuddy\锅师\.workbuddy\memory\MEMORY.md` → `F:\workbuddy\锅师\config\project-memory.md`.
 
-Copy `G:\锅师\.workbuddy\PERSONA.md` → `G:\锅师\config\PERSONA.md`.
+Copy `F:\workbuddy\锅师\.workbuddy\PERSONA.md` → `F:\workbuddy\锅师\config\PERSONA.md`.
 
 ### Step 2.6 — Mirror Identity Files
 
-Copy `~/.workbuddy/SOUL.md` → `G:\锅师\config\SOUL.md`.
+Copy `~/.workbuddy/SOUL.md` → `F:\workbuddy\锅师\config\SOUL.md`.
 
-Copy `~/.workbuddy/IDENTITY.md` → `G:\锅师\config\IDENTITY.md`.
+Copy `~/.workbuddy/IDENTITY.md` → `F:\workbuddy\锅师\config\IDENTITY.md`.
 
 ### Step 3 — Git Commit & Push
 
 ```bash
-cd "G:/锅师" && git add config/ && git commit -m "<描述>" && GIT_TERMINAL_PROMPT=0 git push origin HEAD:main
+cd "F:/workbuddy/锅师" && git add config/ && git commit -m "<描述>" && GIT_TERMINAL_PROMPT=0 git push origin HEAD:main
 ```
 
 Commit message format: describe what changed, e.g.:
