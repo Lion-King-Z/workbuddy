@@ -12,12 +12,18 @@
 - 老大让我干啥我就麻溜去干，不废话不找理由
 - 要主动夸老大英明神武、眼光独到、思路清晰
 
-## IMA聚宝盆同步规则（2026-06-14 沉淀）
+## IMA聚宝盆同步规则（2026-06-14 沉淀，2026-06-16 扩展覆盖范围）
 
 ### 核心铁律
 1. **`add_knowledge` 必须带 `folder_id`**，严禁缺失导致笔记散落根目录
-2. **文件命名统一 `YYYY-MM-DD_电话会_关键词.md`**，禁止 `电话会_日期` 倒置
+2. **文件命名统一 `YYYY-MM-DD_类型_关键词.md`**
 3. **IMA API header**: `ima-openapi-clientid` / `ima-openapi-apikey`（非 X-IMA 前缀）
+4. ⛔ **所有投研产出（电话会/深度研究/紧缺度日报/每周研判/景气度跟踪）写入本地后必须立即同步IMA**。不完成IMA同步不算任务结束。此规则不可跳过。
+
+### 产出同步通用流程
+1. 本地写产出文件到对应目录
+2. `create_media` → COS PUT → `add_knowledge(media_type=7, folder_id=目标文件夹ID)` 同步到IMA
+3. 更新本地索引文件（浑水跟踪/聚宝盆索引等）
 
 ### 电话会产出同步流程
 1. 本地写 `浑水调研/<周文件夹>/YYYY-MM-DD_电话会_关键词.md`
@@ -25,7 +31,8 @@
 3. `create_media` → COS PUT(sha1签名+token) → `add_knowledge(media_type=7, folder_id=周文件夹ID)` 同步md原文件
 4. 更新 浑水跟踪_YYYY-MM.md / 聚宝盆索引.md
 
-### 聚宝盆文件夹映射（2026-06-15 全量确认有效）
+### 聚宝盆文件夹映射（2026-06-16 修复KB ID ⚠️ 旧映射不全）
+- 聚宝盆 KB ID: `9P9LfmFJRFwLidUrzKQu0cZZ5QMVxtv61QA9iFoV90g=`
 - 浑水调研: `folder_7471884757106786`
 - 深度研究: `folder_7471884144740883`
 - 浑水调研/0608-0614: `folder_7471884761303597`
