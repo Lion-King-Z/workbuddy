@@ -5,8 +5,8 @@ license: MIT
 compatibility: Agent Skills-compatible clients. Best with web/search, market-data, filing, browser, and optional python3 access. Bundled scripts are local-only.
 metadata:
   author: muxu-compatible community build
-  version: "1.0.0"
-  short-description: Supply-chain bottleneck hunter for investment agents
+  version: "3.0.0"
+  short-description: Supply-chain bottleneck hunter v3.0 — Chokepoint Hunter 7-chapter methodology with two-step funnel screening
 agent_created: true
 ---
 
@@ -50,9 +50,11 @@ Classify the request, then work in the matching mode.
 - **Research partner conversation**: The user wants to think, learn, or discuss. Ask tight questions and push the idea toward evidence, chain position, and failure conditions.
 - **Learning mode**: The user asks to learn the method. Ask one focused question per turn and walk from trend to system change to scarce layer to proof.
 
-## Research workflow
+## Research workflow — Chokepoint Hunter 六步法 v3.0
 
-Run this workflow for theme scans, current opportunities, and candidate rankings.
+Run this workflow for theme scans, current opportunities, and candidate rankings. The v3.0 method uses a 7-chapter structure with a two-step funnel for bottleneck screening.
+
+### 第一章: Supply-chain topology decomposition (供应链拓扑拆解)
 
 1. **Set the scope**
    - Market: US, Hong Kong, A-share, Taiwan, Japan, Korea, Europe, global, or private-company map.
@@ -64,85 +66,183 @@ Run this workflow for theme scans, current opportunities, and candidate rankings
    - Which old design becomes strained?
    - Which physical constraint matters most: power, latency, bandwidth, heat, yield, purity, reliability, cycle time, packaging density, regulation, or grid connection?
 
-3. **Map the value chain**
-   - downstream demand
-   - system integrators
-   - modules/subsystems
-   - chips/devices
-   - process and packaging
-   - equipment and testing
-   - materials and consumables
-   - physical infrastructure
+3. **Map the value chain with ASCII visualization**
+   - Start from the terminal product and decompose downward to base materials.
+   - downstream demand → system integrators → modules/subsystems → chips/devices → process and packaging → equipment and testing → materials and consumables → physical infrastructure
+   - Render an ASCII tree diagram showing the full topology.
 
-4. **Find the scarce layer**
-   - Look for low supplier count, long qualification, hard expansion, critical know-how, material purity, specialized equipment, customer certification, long lead times, or capacity reservations.
-   - Prefer less obvious upstream layers when the evidence supports them.
-   - Rank the layers before naming final companies. The user should see the system logic before the ticker list.
+4. **Single-point dependency node identification (单点依赖节点识别)**
+   - Assign each key node an ID (N1, N2, N3...).
+   - For each node, classify system role (核心 core / 辅助 auxiliary / 前瞻性 forward-looking).
+   - Document available alternatives and single-point dependency risk (★★★ high / ★★ medium / ★ low).
 
-   🔴 **CHECKPOINT — 步骤4出口**：确认以下条件全部满足再进入 4b：
-   - [ ] 已识别至少 3 层供给约束环节
-   - [ ] 每层已标注约束类型（技术/产能/政策/原材料/资质）
-   - [ ] 各层已按供给刚性初步排序（扩产周期长→短）
+   🔴 **CHECKPOINT — 第一章出口**：确认以下条件全部满足再进入第二章：
+   - [ ] ASCII产业链图已绘制，覆盖终端产品到基础材料
+   - [ ] 单点依赖节点已编号（N1-N8+），每个标注系统角色和替代方案
+   - [ ] 各节点单点依赖风险已评级（★★★/★★/★）
 
-4b. **Prosperity scan (景气度扫描)**
-   Score each scarce layer on two dimensions (1-5 stars each):
+### 第二章: Bottleneck screening — two-step funnel (瓶颈点筛选)
 
-   **景气度 (Demand Strength)**: demand growth rate, price momentum, downstream purchasing intent, analyst coverage density.
-   **供给刚性 (Supply Rigidity)**: expansion cycle length, capacity utilization, barriers to new capacity (equipment/materials/regulatory), policy ceiling.
+#### Step 1: Quick screening (快速筛查, 1-5 points)
 
-   ```markdown
-   紧缺综合分 = 景气度 ★ × 供给刚性 ★
-   ```
+Score each node on three dimensions to fast-route them into pools:
 
-   **Tier rules**:
-   - Both ≥ 4★ → "极度紧缺" (critical scarcity)
-   - One ≥ 4★ → "显著紧缺" (significant scarcity)
-   - Otherwise → "结构性紧缺" (structural scarcity)
+- **不可替代性 (Irreplaceability)**: 1=no alternatives exist, 5=many alternatives
+- **集中度 (Concentration)**: 1=monopoly, 5=fully competitive
+- **供应弹性 (Supply elasticity)**: 1=zero expansion possible, 5=easy expansion
 
-   **Quantitative verification**: Before scoring, each layer must have at least one hard data point: price change (%), capacity utilization (%), lead time change (days/weeks), supply-demand gap (tons/km/etc.), or inventory day change. Layers without quantitative data are downgraded to an appendix with "数据待验证".
+**Routing rules**:
+- 🔴 **Deep-dive pool (深挖池)**: any dimension ≥ 4 → proceed to Step 2
+- 🟡 **Edge pool (边缘池)**: 2 dimensions = 3 → note reason, hold
+- ❌ **Excluded**: all dimensions ≤ 2 → drop
 
-   **Scarcity ranking output**: After scoring all layers, produce a ranked table **from highest to lowest scarcity**:
+Quality check: deep-dive pool should have ≥ 2 nodes (≥ 3 points ✓), edge pool reasons documented ✓.
 
-   ```
-   | 排名 | 环节 | 景气度 | 供给刚性 | 紧缺分 | 最稀缺标的 | 定量数据 |
-   |:----:|------|:------:|:--------:|:------:|------------|----------|
-   |  1   | ...  |  ★★★★  |  ★★★★★   |  20/25 | ...        | ...      |
-   ```
+#### Step 2: Deep 4-dimension weighted scoring (深度四维度评分)
 
-   🛑 **STOP — 步骤4b出口**：若定量数据覆盖 < 3 层，不进入公司池，先补充 WebSearch 拉数据。若定量数据 ≥ 3 层但维度覆盖不全（缺少价格涨幅/产能利用率/交期之一），标注「数据待补充」后继续。
+For each deep-dive pool node, score on four weighted dimensions:
 
-   **强制输出要求**：步骤4b结束后必须显式输出以下两部分：
-   - **供应紧缺信号清单**：列举所有出现明显供应紧缺信号的环节/品种，附一句话核心逻辑
-   - **稀缺度排名**：按稀缺性从强到弱排列，每个环节给出最稀缺标的及稀缺理由
+| Dimension | Weight | What it measures |
+|-----------|--------|------------------|
+| 不可替代性 (Irreplaceability) | 30% | Technical壁垒, no substitute available |
+| 供应弹性 (Supply elasticity) | 30% | Expansion cycle, capacity utilization |
+| 集中度 (Concentration) | 20% | Supplier concentration, customer lock-in |
+| 认知偏差 (Cognitive gap) | 20% | Market mispricing — is the thesis already priced in? |
 
-5. **Build the company universe**
-   - Include public and important private companies across multiple layers.
-   - For broad theme scans, aim for at least 20 candidates before filtering to the final 3-7.
-   - For cross-market work, include non-US listings when relevant.
-   - Classify each company in plain language: controls the scarce layer, supplies the scarce layer, benefits from the trend, has weak control, or mainly has a story.
+**Weighted total = Irreplaceability×30% + Supply elasticity×30% + Concentration×20% + Cognitive gap×20%**
 
-6. **Gather and grade evidence**
-   - Prefer primary sources: filings, exchange documents, company announcements, transcripts, official orders, patents, standards, regulatory records, project filings.
-   - Use reputable media, trade publications, and specialist analysis as support.
-   - Treat social posts and KOL threads as lead generation. Use stronger sources for proof.
-   - For deep current scans, aim for at least 25 sources across filings, announcements, reports, exchange documents, credible media, and technical sources.
+**Verdict thresholds**:
+- 🔴 **Red alert** (core bottleneck): weighted total ≥ 4.0
+- 🟠 **Orange watch** (medium bottleneck): weighted total 3.5-3.9
+- 🟡 **Yellow attention** (edge bottleneck): weighted total 3.0-3.4
+- ⚪ **White exclude** (no bottleneck): weighted total < 3.0
 
-   🔴 **CHECKPOINT — 步骤6出口**：每个 top-3 候选标的至少有 1 个强源（L0 官方文件/L1 公司公告/L2 交易所数据），纯 D/C 级信源的标的降级到「待验证」。
+**Source tier tagging (信源等级)**:
+- **T1**: Primary official source (filings, exchange docs, annual reports, tenders, patents)
+- **T2**: Authoritative secondary (industry associations, regulators, official statistics)
+- **T3**: Analytical sources (broker reports, financial media, industry research)
+- **-**: No clear source
 
-7. **Rank priorities**
-   - **Rank scarce layers by scarcity score first** (step 4b output), then rank companies within each layer.
-   - Sort from highest to lowest scarcity — the most supply-constrained layer always goes first.
-   - Rank by demand pressure, closeness to the scarce layer, supplier concentration, expansion difficulty, evidence quality, valuation gap, timing, and risk.
-   - Keep scarce-layer priority and company priority separate. Strong earnings momentum can rank below a tighter supply-chain layer.
-   - For every final top candidate, say exactly what part of the value chain it constrains or sits closest to.
-   - Use `scripts/serenity_scorecard.py` for repeatable scoring when Python is available and the user wants a score.
+**Cognitive gap scoring guide (v3.0 innovation)**:
+- 5: Market completely unaware, high purity and about to ramp
+- 4: Market has初步 awareness but purity/elasticity underestimated
+- 3: Market has some awareness, partial logic priced in
+- 2: Market fully aware, main logic priced in (PE reflects it)
+- 1: Market over-aware, expectations exhausted (high risk)
 
-8. **Explain what could go wrong**
-   - Describe the clearest situations that would show the idea is weak or wrong.
-   - Cover substitution, faster competitor expansion, weak demand, dilution, poor margins, governance, geopolitics, customer loss, and valuation already pricing in success.
+   🛑 **STOP — 第二章出口**：若深挖池 < 2 节点，不进入第三章，先回第一章补充节点识别。每个深挖池节点必须完成四维度评分+信源标注。
 
-9. **Give the next research move**
-   - End with concrete checks: filings, specific metrics, customer cross-checks, capacity evidence, contract evidence, valuation comparison, and near-term announcements to watch.
+### 第三章: 6-signal scarcity detection (紧缺信号六维检测)
+
+For each deep-dive pool node, run six-dimension signal detection:
+
+| Signal category | What to detect | Status |
+|-----------------|----------------|--------|
+| A. Price signal | Price trend, margin change, value uplift | 🟢 detected / ⚪ unverified |
+| B. Capacity signal | Utilization rate, expansion plan, ramp timeline | 🟢 detected / ⚪ unverified |
+| C. Customer behavior | Large-customer lock-in, certification barriers, order visibility | 🟢 detected / ⚪ unverified |
+| D. Inventory signal | Inventory turnover, stocking pressure, channel inventory | 🟢 detected / ⚪ unverified |
+| E. Investment signal | Capex, production line investment, R&D spend | 🟢 detected / ⚪ unverified |
+| F. Cross-market validation | Overseas benchmarks, value-chain cross-checks, tech roadmap confirmation | 🟢 detected / ⚪ unverified |
+
+**Alert level**:
+- 4-6 signals confirmed → 🔴 **Red alert** (scarcity confirmed)
+- 3 signals confirmed → 🟠 **Orange watch** (scarcity expectation forming)
+- 1-2 signals confirmed → 🟡 **Yellow attention** (scarcity lead)
+- 0 signals confirmed → ⚪ **White no signal**
+
+   🔴 **CHECKPOINT — 第三章出口**：每个深挖池节点必须有六维检测结果+预警等级。
+
+### 第四章: Target positioning (标的定位)
+
+#### 4.1 Three-dimension target evaluation
+
+For the final candidate companies, score on three dimensions:
+
+| Dimension | What it measures |
+|-----------|------------------|
+| 纯度 (Purity) | Core business relevance to the bottleneck theme |
+| 弹性 (Elasticity) | Value uplift potential, earnings growth, capacity elasticity |
+| 催化剂 (Catalyst) | Near-term catalyst clarity, certainty, time window |
+
+**Composite verdict**:
+- 🔴 **Core target**: Purity ≥ 4★ + Elasticity ≥ 4★ + Catalyst ≥ 4★
+- 🟠 **Key watch**: Any two dimensions ≥ 4★
+- 🟡 **Observation**: Any one dimension ≥ 4★
+- ⚪ **Excluded**: All < 4★
+
+#### 4.2 Comparable analysis
+
+Build a peer comparison table with business description, purity, elasticity, catalyst, and valuation (PE TTM).
+
+#### 4.3 Risk annotation
+
+Document: valuation risk, technology substitution risk, purity dilution, customer concentration, trade friction, capacity ramp risk.
+
+   🔴 **CHECKPOINT — 第四章出口**：每个推荐标的必须有纯度/弹性/催化剂三星评分+可比标的+风险标注。
+
+### 第五章: Timing judgment (时机判断)
+
+#### 5.1 Signal stage classification
+
+Classify each bottleneck node into a timing stage:
+
+- 🔴 **Scarcity confirmed**: 6 signals ≥ 4 confirmed, earnings already delivered
+- 🟠 **Scarcity expectation → confirmation transition**: Small-batch delivery, capacity about to ramp, earnings not yet reflected
+- 🟡 **Scarcity fully recognized**: Main logic priced in, PE reflects it
+- ⚪ **Scarcity not formed**: Insufficient signals, early stage
+
+Provide operational advice for each stage.
+
+#### 5.2 Catalyst calendar
+
+Build a time-table of upcoming catalysts with importance ratings (★ to ★★★★★).
+
+   🔴 **CHECKPOINT — 第五章出口**：每个节点必须有信号阶段判定+催化剂日历。这是v3.0的强制新增章节。
+
+### 第六章: Reverse verification (反向验证)
+
+Stress-test the thesis:
+
+1. **Substitute technology roadmap probability**: For each alternative, assess status, impact, and probability (high/medium/low) with time window.
+2. **Overseas giant capacity over-release**: Analyze whether overseas leaders expanding helps or hurts.
+3. **Downstream demand shortfall scenarios**: Probability and impact table.
+4. **Blind-spot self-check**:
+   - Are edge-pool nodes underestimated?
+   - Are there "off-mainstream-narrative but strong卡位" links missed?
+   - Is there confirmation bias in search keywords?
+
+### 第七章: Monitoring checklist (监控清单)
+
+#### 7.1 High-frequency indicators (weekly)
+
+Stock price/volume, sector heat, overseas benchmark stock, industry news — with monitoring method and alert signals.
+
+#### 7.2 Low-frequency indicators (monthly)
+
+Earnings pre-announcements, capacity ramp progress, downstream shipment guidance, analyst coverage changes, competitive landscape shifts.
+
+   🛑 **STOP — 第七章出口**：每个推荐标的必须有高频+低频监控清单。这是v3.0的强制新增章节。
+
+## Prosperity scan integration (景气度扫描集成)
+
+The v2.0 prosperity scan (景气度×供给刚性) is now integrated into Step 1 quick screening as part of the three-dimension scoring. The v3.0 four-dimension deep scoring supersedes the v2.0 star-multiply method for deep-dive nodes.
+
+For theme scans that need a quick layer-level scarcity ranking before company analysis, the v2.0 star table is still valid as a fast-preview tool:
+
+| 排名 | 环节 | 景气度 | 供给刚性 | 紧缺分 | 最稀缺标的 | 定量数据 |
+|:----:|------|:------:|:--------:|:------:|------------|----------|
+|  1   | ...  |  ★★★★  |  ★★★★★   |  20/25 | ...        | ...      |
+
+But for any node that enters the deep-dive pool, the v3.0 four-dimension weighted scoring is authoritative.
+
+## Company universe and evidence (integrated into 第四章)
+
+The v2.0 steps 5-6 (build company universe, gather evidence) are now integrated into 第四章 Target positioning:
+
+- **Company universe**: Build from deep-dive pool nodes. For broad theme scans, aim for at least 20 candidates before filtering to final 3-7. Classify each: controls the scarce layer, supplies it, benefits from the trend, weak control, or mainly a story.
+- **Evidence grading**: Integrated into 第二章 Step 2 source-tier tagging (T1/T2/T3) and 第三章 6-signal detection. Every top-3 candidate must have at least 1 T1 source (filing/exchange/annual report). Pure T3-only candidates are downgraded to "待验证".
+- **Scoring script**: Use `scripts/serenity_scorecard.py` for repeatable scoring when Python is available.
 
 ## Evidence standards
 
@@ -272,14 +372,20 @@ Read `references/risk-and-compliance.md` for high-risk situations.
 
 | # | 禁止项 | 原因 | 正确做法 |
 |---|--------|------|----------|
-| 1 | 未经定量验证打「极度紧缺」评级 | 纯定性判断不可靠 | 步骤4b 强制至少 1 个定量数据点 |
+| 1 | 未经定量验证打「极度紧缺」评级 | 纯定性判断不可靠 | 第二章 Step 2 强制四维度评分+定量依据 |
 | 2 | 跳过稀缺层排序直接列公司 | 用户看不到系统逻辑 | 先排层再排公司 |
-| 3 | 仅凭卖方研报标题（C 级）做结论 | 分析师研报需交叉验证 | 升至 A/B 级才能引用 |
+| 3 | 仅凭卖方研报标题（T3级）做结论 | 分析师研报需交叉验证 | 升至 T1/T2 级才能引用 |
 | 4 | 捏造不存在的价格/产能/交期数据 | 误导投资决策 | 标注来源，未知就写「未获取」 |
 | 5 | 对顺风层做昊天层级推荐 | 资源约束和确定性差一个量级 | 分层标注层次差异 |
 | 6 | 省略定量数据标注 | 读者无法判断数据可信度 | 每行必须标注数据来源日期 |
 | 7 | 同分环节不明确排序理由 | 排名无意义 | 同分必须写「并列原因：XXX」 |
 | 8 | 多头排列标的在反方论证中轻描淡写 | 反向压力测试无效 | 反方论据必须与正方等量篇幅 |
+| 9 | 跳过两步漏斗直接评分 | 快速筛查→深度评分的漏斗不可省略 | 必须先 Step 1 快速筛查分流，再 Step 2 深度评分 |
+| 10 | 缺少认知偏差维度评分 | v3.0核心创新，衡量市场是否已定价 | 四维度必须包含认知偏差（20%权重） |
+| 11 | 缺少时机判断章节 | 信号阶段+催化剂日历是v3.0强制章节 | 第五章必须给信号阶段判定+催化剂日历 |
+| 12 | 缺少监控清单 | 高频+低频分层监控是v3.0强制章节 | 第七章必须给高频（每周）+低频（每月）监控 |
+| 13 | 缺少紧缺信号六维检测 | 独立验证步骤不可省略 | 第三章必须对每个深挖池节点做六维检测 |
+| 14 | 输出纯文本报告（无HTML格式） | 关键信息不醒目，阅读体验差 | 必须用HTML可视化格式，颜色编码 |
 
 Load only what is needed:
 
