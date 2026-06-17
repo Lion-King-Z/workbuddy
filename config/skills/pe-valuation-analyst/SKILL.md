@@ -1,6 +1,6 @@
 ---
-name: pe-valuation-landing
-description: PE valuation landing for individual stocks. Use this skill to turn a chain narrative into a source-backed PE landing report: decision summary panel, PE-digestion path, catalyst tracker, chain-position map, multi-horizon PE + PEG check, pivot-weighted valuation worksheet, dual-track catalyst valuation with probability weighting, four-scenario risk quant, position discipline + verification timeline. Trigger on "PE估值落地", "估值落地", "个股PE分析", "打低路径", "中枢加权估值", "催化估值", "仓位建议", "验证节点", "估值工卡". Research support only; no trade execution.
+name: pe-valuation-analyst
+description: PE valuation analyst for individual stocks. Use this skill to turn a chain narrative into a source-backed PE landing report: decision summary panel, PE-digestion path, catalyst tracker, chain-position map, multi-horizon PE + PEG check, pivot-weighted valuation worksheet, dual-track catalyst valuation with probability weighting, four-scenario risk quant, position discipline + verification timeline. Trigger on "PE估值落地", "估值落地", "个股PE分析", "打低路径", "中枢加权估值", "催化估值", "仓位建议", "验证节点", "估值工卡". Research support only; no trade execution.
 license: MIT
 compatibility: Agent Skills-compatible clients. Best with web/search, market-data, filing, and optional python3 access.
 metadata:
@@ -10,7 +10,7 @@ metadata:
 agent_created: true
 ---
 
-# pe-valuation-landing
+# pe-valuation-analyst
 
 把一句市场叙事收口到**单只标的的 PE 估值落地**。
 

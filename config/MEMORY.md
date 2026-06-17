@@ -56,3 +56,47 @@
 **⛔ search_knowledge API 返回字段**：`info_list` + `title`（不是 media_list + name）
 **⛔ create_folder 必须传 `folder_id`**：否则创建到根目录！
 **⛔ 周文件夹**：根据电话会日期自动计算（周一MMDD-周日MMDD），不硬编码
+
+---
+
+## IMA知识库全量清单（2026-06-17 枚举+可读性检测）
+
+⚠️ KB ID 和 parent_folder_id（根文件夹ID）是两套不同的ID系统。`search_knowledge` 用 KB ID，`get_knowledge_list` 用 folder_id。部分KB名称相近，极易混淆，必须对照此表。
+
+### 外部订阅/共享KB
+
+| 简称 | KB ID | 根文件夹ID | 类型 | 内容量 | 可读原文 | 备注 |
+|------|-------|-----------|------|:--:|:--:|------|
+| **原文可查看** | `Y11UpEfiPNaF5OkYKkUIfkFFx2RvQwmwMANh9Ic3wV0=` | `7376978889961586` | 共享 | 43,297 | ✅ | **唯一可读原文的外部KB**。名称含"浑水调研"，但不同于订阅KB |
+| 叫我第一名 | `MUb6MX2SCTN5Xi2EjCPBsHHuWODJ-fHkL7lSAXe_BdE=` | `7297249738490228` | 订阅 | 52,380 | ❌ | 220030权限不足，仅标题搜索 |
+| 基业长青 | `FNp7vC8yz86Zkwa6Jm7Ie1_UP5G7k76UyqGvzRZxfxQ=` | `7299075300937647` | 订阅 | 51,997 | ❌ | 220030权限不足，仅标题搜索 |
+| 深证信公告库 | `ud8rSIuj8Cz7HzY_0l0ZAtaQwqacfKvCWk2WIEaSjmo=` | `7416670364645874` | 订阅 | 994,843 | ❌ | 220030权限不足，仅标题搜索 |
+| 半拿铁 | `AL8bKNNPcO24bLehhn5T7iBV2Ixnt8CANyiK5W6uAYc=` | - | 订阅 | 168 | - | 非投研相关 |
+| 倪海厦天人地 | `VCJVgthDtIR0_KVuwQw95vu0h0ZXDX333xikfn7oJc0=` | - | 订阅 | 87 | - | 非投研相关 |
+
+### 自有KB
+
+| 简称 | KB ID | 类型 | 内容量 | 可读原文 | 备注 |
+|------|-------|------|:--:|:--:|------|
+| **聚宝盆** | `9P9LfmFJRFwLidUrzKQu0cZZ5QMVxtv61QA9iFoV90g=` | 共享 | 76 | ✅ | **主输出KB**，所有投研产出入此 |
+| 锅师信息沉淀 | `H5_d3blGR5OHBZdwI-ecQyEqYvG74TbNx4IfpwXc7rM=` | 共享 | 284 | ✅ | 内部投研沉淀 |
+| 小说 | `P4QNtgxNHfCwdE6Gppflm9DG4k7oIn54EFR2SRyMH9c=` | 共享 | 15 | ✅ | 非投研 |
+| 个人KB（空） | `NO1ogmo44MWg5e5pxAXhXtQclsY3CpUItp7P8PqlHBo=` | 个人 | 0 | ✅ | 空，勿用 |
+| 共享KB（空） | `pVlhFXpOQk6BEMwyY-W6MXI7ge5av3aEGVD7Bfll3cc=` | 共享 | 0 | ✅ | 空，同名，勿混淆 |
+
+### 易混淆警示
+
+| 混淆场景 | 正确做法 |
+|----------|---------|
+| "浑水调研"出现在3个KB名中 | **只有「原文可查看」可读原文**。叫我第一名/基业长青仅标题搜索 |
+| 自动化的KB ID写成数字 `7376978889961586` | 那是 parent_folder_id（根文件夹），**不是KB ID**。搜索用KB ID |
+| 两个"进击的狮王🦁的知识库"同名 | 一个个人(空)一个共享(空)，不用于投研，忽略 |
+| 深证信名称不含"浑水" | 但也是订阅KB，和叫我第一名/基业长青同属不可读订阅类 |
+
+### 可读性分级速查
+
+| 能否通过API读原文 | KB列表 |
+|:--:|------|
+| ✅ 可读 | 原文可查看、聚宝盆、锅师信息沉淀、小说 |
+| ❌ 不可读（220030） | 叫我第一名、基业长青、深证信公告库 |
+| 未测 | 半拿铁、倪海厦（非投研，无需测）
