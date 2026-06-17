@@ -1,4 +1,24 @@
 timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
-2026-06-16T20:16	baseline	景气度skill	-	60.8	baseline	-	初始基线评估	dry_run
-2026-06-16T20:18	round1	景气度skill	60.8	85.5	keep	dim2/3/4簇	重组为4步执行流+fallback表+CHECKPOINT	dry_run
-2026-06-16T20:21	round2	景气度skill	85.5	87.3	keep	dim5/8	新增中国巨石完整演练案例	dry_run
+2026-06-07T21:10	52041d2	信源检查	84.3	92.2	keep	dim④+dim③	checkpoints + failure fallback table	dry_run
+2026-06-07T21:27	c2808ae	国策主题投研	77.2	86.5	keep	dim①+④+⑨+⑥	frontmatter+checkpoints+blacklist+resources drawer	dry_run
+2026-06-14T21:25	baseline	每日投研推送	-	80.0	baseline	-	初始评估	dry_run
+2026-06-14T21:28	r1	每日投研推送	80.0	86.0	keep	dim④+dim③	Step5验证检查点(✅/❌) + 沉淀失败fallback 2条	dry_run
+2026-06-14T21:29	r2	每日投研推送	86.0	88.0	keep	dim⑥+dim⑤	新增依赖声明章节 + IMA API 5步流程具体化	dry_run
+2026-06-17T11:30	baseline	浑水电话会深度分析	-	84.0	baseline	-	初始评估;短板:dim6路径G:\≠F:\+dim9禁止行为与命名矛盾+dim2 5B/5C步骤模糊+dim7 S级标准重复	dry_run
+2026-06-17T11:35	r1	浑水电话会深度分析	84.0	85.0	keep	dim6+dim9	路径G:\→F:\workbuddy\ + 禁止行为第1条逻辑矛盾修正	dry_run
+2026-06-17T11:40	r2	浑水电话会深度分析	85.0	86.2	keep	dim2	5A→5B→5C→5D四步顺序明确化 + 5B从月度总账改为每日独立md	dry_run
+2026-06-17T11:45	r3	浑水电话会深度分析	86.2	87.4	keep	dim7	删除S级5条硬规则简版重复表 月度跟踪表标准独立成章	dry_run
+2026-06-17T11:50	r4	浑水电话会深度分析	87.4	89.7	keep	dim8	新增阶段零原文获取(IMA拉取+STOP规则) 补全无原文场景盲区	dry_run
+2026-06-17T11:55	baseline	产业链瓶颈投研	-	84.0	baseline	-	初始评估;短板:dim4步骤7/8/9缺checkpoint+dim9禁止行为缺正确做法列	dry_run
+2026-06-17T11:55	baseline	每周研判	-	58.0	baseline	-	初始评估;短板:dim3无异常处理+dim4无checkpoint+dim6无references	dry_run
+2026-06-17T11:55	baseline	选金	-	64.0	baseline	-	初始评估;短板:dim4 checkpoint只在末尾+dim6无references	dry_run
+2026-06-17T11:55	baseline	项目结构规范	-	45.0	baseline	-	初始评估;短板:dim2无workflow+dim3无异常+dim4无checkpoint+dim9无禁止行为	dry_run
+2026-06-17T11:55	baseline	国策主题投研	86.5	87.0	baseline	-	重评;小变化;短板:dim6无test-prompts+第五步交叉验证细节不足	dry_run
+2026-06-17T12:00	r1	项目结构规范	45.0	68.0	keep	dim2+dim3+dim4+dim9	新增工作流+异常处理表7条+CHECKPOINT/STOP+禁止行为7条正确做法列	dry_run
+2026-06-17T12:00	r1	每周研判	58.0	69.0	keep	dim3+dim4+dim6	新增异常处理表7条+5步CHECKPOINT+引用资源章节	dry_run
+2026-06-17T12:00	r1	选金	64.0	68.0	keep	dim4+dim6+dim9	checkpoint前置分布+引用资源章节+禁止行为补正确做法列+2条	dry_run
+2026-06-17T12:00	r1	产业链瓶颈投研	84.0	85.0	keep	dim4+dim9	步骤7/8/9补CHECKPOINT+禁止行为新增2条	dry_run
+2026-06-17T12:00	r1	国策主题投研	87.0	89.0	keep	dim6+dim8+dim2	新增test-prompts.json+第五步5A-5D细化	dry_run
+2026-06-17T12:05	r2	项目结构规范	68.0	72.0	keep	dim5+dim8	路径切换具体命令+Python周文件夹计算函数+3个实测示例	dry_run
+2026-06-17T12:05	r2	每周研判	69.0	72.0	keep	dim2+dim5+dim8	第一步5个子步骤A-D明确化+具体文件路径+IMA API调用方法+时间窗口计算	dry_run
+2026-06-17T12:05	r2	选金	68.0	73.0	keep	dim2+dim5+dim8	流程6步+时间预算45秒+4个实测示例覆盖各类场景	dry_run

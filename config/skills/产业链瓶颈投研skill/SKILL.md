@@ -137,12 +137,21 @@ Run this workflow for theme scans, current opportunities, and candidate rankings
    - For every final top candidate, say exactly what part of the value chain it constrains or sits closest to.
    - Use `scripts/serenity_scorecard.py` for repeatable scoring when Python is available and the user wants a score.
 
+   🔴 **CHECKPOINT — 步骤7出口**：确认以下条件全部满足再进入步骤8：
+   - [ ] 稀缺层已按紧缺分从高到低排序
+   - [ ] 每层内公司已独立排序
+   - [ ] 每个top候选标的已标注「卡住的环节 / 产业链位置 / 排序原因 / 证据 / 主要风险」
+
 8. **Explain what could go wrong**
    - Describe the clearest situations that would show the idea is weak or wrong.
    - Cover substitution, faster competitor expansion, weak demand, dilution, poor margins, governance, geopolitics, customer loss, and valuation already pricing in success.
 
+   🔴 **CHECKPOINT — 步骤8出口**：每个top候选标的至少有1条反方论据，且篇幅与正方论据等量。
+
 9. **Give the next research move**
    - End with concrete checks: filings, specific metrics, customer cross-checks, capacity evidence, contract evidence, valuation comparison, and near-term announcements to watch.
+
+   🔴 **CHECKPOINT — 步骤9出口**：每个top候选标的至少有1条具体可执行的下一步验证动作（含数据源/文件类型/时间窗口）。
 
 ## Evidence standards
 
@@ -280,6 +289,8 @@ Read `references/risk-and-compliance.md` for high-risk situations.
 | 6 | 省略定量数据标注 | 读者无法判断数据可信度 | 每行必须标注数据来源日期 |
 | 7 | 同分环节不明确排序理由 | 排名无意义 | 同分必须写「并列原因：XXX」 |
 | 8 | 多头排列标的在反方论证中轻描淡写 | 反向压力测试无效 | 反方论据必须与正方等量篇幅 |
+| 9 | 跳过步骤8（反方论证）直接给结论 | 缺失失败条件分析 | 每个top候选必须有反方论据 |
+| 10 | 步骤9「下一步」给空泛建议 | 无法执行 | 必须含数据源/文件类型/时间窗口 |
 
 Load only what is needed:
 

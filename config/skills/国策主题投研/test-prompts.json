@@ -1,0 +1,24 @@
+{
+  "skill": "国策主题投研",
+  "version": "1.0",
+  "prompts": [
+    {
+      "id": "p1-happy",
+      "category": "happy-path",
+      "prompt": "昊天意志现在指向哪里？给我当前的昊天层、天命层、顺风层",
+      "expected": "三层映射表 + 每层政策依据 + 资金规模 + 产业链稀缺环节 + 时效性标注"
+    },
+    {
+      "id": "p2-deep",
+      "category": "deep-research",
+      "prompt": "低空经济是国家支柱产业吗？给我完整的投研框架",
+      "expected": "先判断层级（天命层）+ 政策依据 + 资金规模 + 题材拆解 + 产业链稀缺环节 + 交叉验证 + 反方论据"
+    },
+    {
+      "id": "p3-boundary",
+      "category": "boundary",
+      "prompt": "新能源汽车算昊天层吗",
+      "expected": "判断为顺风层（非昊天层）+ 解释原因（渗透率>50%从增量变存量）+ 不夸大推荐"
+    }
+  ]
+}
