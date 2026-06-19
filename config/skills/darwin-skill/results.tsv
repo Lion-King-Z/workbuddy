@@ -2,3 +2,6 @@ timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
 2026-06-16T20:16	baseline	景气度skill	-	60.8	baseline	-	初始基线评估	dry_run
 2026-06-16T20:18	round1	景气度skill	60.8	85.5	keep	dim2/3/4簇	重组为4步执行流+fallback表+CHECKPOINT	dry_run
 2026-06-16T20:21	round2	景气度skill	85.5	87.3	keep	dim5/8	新增中国巨石完整演练案例	dry_run
+2026-06-19T21:23:22+08:00	ae40873	产业链纵深研究	-	71.5	baseline	-	初始评估。dim4检查点1.8/6最低	dry_run
+2026-06-19T21:23	round1	产业链纵深研究	71.5	73.9	keep	dim4	新增3处CHECKPOINT/STOP标记	dry_run
+2026-06-19T21:23	round2	产业链纵深研究	73.9	77.3	keep	dim5	添加完整MD输出模板(6章节+推荐矩阵)	dry_run
