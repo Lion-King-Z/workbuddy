@@ -5,8 +5,8 @@ license: MIT
 compatibility: Agent Skills-compatible clients. Best with web/search, market-data, filing, browser, and optional python3 access. Bundled scripts are local-only.
 metadata:
   author: muxu-compatible community build
-  version: "3.0.0"
-  short-description: Supply-chain bottleneck hunter v3.0 — Chokepoint Hunter 7-chapter methodology with two-step funnel screening
+  version: "3.1.0"
+  short-description: Supply-chain bottleneck hunter v3.1 — Chokepoint Hunter 7-chapter methodology with two-step funnel screening + supply rigidity taxonomy + catalyst chain
 agent_created: true
 ---
 
@@ -50,9 +50,9 @@ Classify the request, then work in the matching mode.
 - **Research partner conversation**: The user wants to think, learn, or discuss. Ask tight questions and push the idea toward evidence, chain position, and failure conditions.
 - **Learning mode**: The user asks to learn the method. Ask one focused question per turn and walk from trend to system change to scarce layer to proof.
 
-## Research workflow — Chokepoint Hunter 六步法 v3.0
+## Research workflow — Chokepoint Hunter 六步法 v3.1
 
-Run this workflow for theme scans, current opportunities, and candidate rankings. The v3.0 method uses a 7-chapter structure with a two-step funnel for bottleneck screening.
+Run this workflow for theme scans, current opportunities, and candidate rankings. The v3.1 method uses a 7-chapter structure with a two-step funnel, supply rigidity taxonomy, and catalyst chain for bottleneck screening.
 
 ### 第一章: Supply-chain topology decomposition (供应链拓扑拆解)
 
@@ -98,18 +98,44 @@ Score each node on three dimensions to fast-route them into pools:
 
 Quality check: deep-dive pool should have ≥ 2 nodes (≥ 3 points ✓), edge pool reasons documented ✓.
 
+#### Step 1.5: Supply rigidity taxonomy (供给刚性分类, v3.1新增 — 盲区修正)
+
+**核心理念**：供给刚性不是单一维度。不同类型的刚性→不同的催化剂模式→不同的估值方式。必须先分类，再评分。
+
+三分法（互斥归属，选最匹配的一项）：
+
+| 类型 | 定义 | 典型特征 | 催化剂模式 | 估值判据 |
+|:---|:---|:---|:---|:---|
+| **产能约束型** | 物理产能是硬约束，扩产周期>18月 | 扩产需要建厂/环评/设备交期长，产能利用率已>85% | 催化剂=新产能投产公告+产能利用率数据 | P/B + 产能价值（吨产能市值） |
+| **认证锁定型** | 客户认证是硬壁垒，新进入者需2年+ | 通过下游大客户qualification是唯一入场券，试错成本极高 | 催化剂=新客户认证通过+订单公告 | P/E + 在手订单/营收比 |
+| **地缘切割型** | 贸易管制/出口限制造成供给分裂 | 国内无法进口或进口成本飙升，国内替代是唯一选项 | 催化剂=管制升级+国产替代政策落地 | 国产替代空间（进口量×单价） |
+
+**分类判定逻辑**（依次问三个问题，第一个"是"即为该类型）：
+1. 主要瓶颈是否来自物理产能限制（建厂/设备/周期）？ → 是→产能约束型
+2. 主要瓶颈是否来自客户认证/qualification壁垒？ → 是→认证锁定型
+3. 主要瓶颈是否来自贸易管制/出口限制/地缘政治？ → 是→地缘切割型
+
+**与四维度评分的关系**：
+- 产能约束型 → 不可替代性维度权重提升（30%→35%），供应弹性权重下降（30%→25%）
+- 认证锁定型 → 集中度维度权重提升（20%→25%），认知偏差权重下降（20%→15%）
+- 地缘切割型 → 认知偏差维度权重提升（20%→25%），集中度权重下降（20%→15%）
+
+🛑 **CHECKPOINT — Step 1.5 出口**：每个深挖池节点必须有供给刚性类型标注+调整后的四维度权重。分类决定催化剂判断路径。
+
 #### Step 2: Deep 4-dimension weighted scoring (深度四维度评分)
 
-For each deep-dive pool node, score on four weighted dimensions:
+For each deep-dive pool node, score on four weighted dimensions.
+**⚠️ 权重非固定**：基础权重如下，但需根据 Step 1.5 供给刚性类型做调整（产能约束/认证锁定/地缘切割各调整±5%）：
 
-| Dimension | Weight | What it measures |
-|-----------|--------|------------------|
-| 不可替代性 (Irreplaceability) | 30% | Technical壁垒, no substitute available |
-| 供应弹性 (Supply elasticity) | 30% | Expansion cycle, capacity utilization |
-| 集中度 (Concentration) | 20% | Supplier concentration, customer lock-in |
-| 认知偏差 (Cognitive gap) | 20% | Market mispricing — is the thesis already priced in? |
+| Dimension | 基础权重 | 产能约束型 | 认证锁定型 | 地缘切割型 | What it measures |
+|-----------|:---:|:---:|:---:|:---:|------------------|
+| 不可替代性 (Irreplaceability) | 30% | **35%** | 30% | 30% | Technical壁垒, no substitute available |
+| 供应弹性 (Supply elasticity) | 30% | **25%** | 30% | 30% | Expansion cycle, capacity utilization |
+| 集中度 (Concentration) | 20% | 20% | **25%** | **15%** | Supplier concentration, customer lock-in |
+| 认知偏差 (Cognitive gap) | 20% | 20% | **15%** | **25%** | Market mispricing — is the thesis already priced in? |
 
-**Weighted total = Irreplaceability×30% + Supply elasticity×30% + Concentration×20% + Cognitive gap×20%**
+**Weighted total = Σ(维度得分 × 调整后权重)**
+**使用供给刚性类型对应的权重列，不使用基础权重列。**
 
 **Verdict thresholds**:
 - 🔴 **Red alert** (core bottleneck): weighted total ≥ 4.0
@@ -181,7 +207,7 @@ Document: valuation risk, technology substitution risk, purity dilution, custome
 
    🔴 **CHECKPOINT — 第四章出口**：每个推荐标的必须有纯度/弹性/催化剂三星评分+可比标的+风险标注。
 
-### 第五章: Timing judgment (时机判断)
+### 第五章: Timing judgment + Catalyst chain (时机判断+催化剂链)
 
 #### 5.1 Signal stage classification
 
@@ -194,11 +220,53 @@ Classify each bottleneck node into a timing stage:
 
 Provide operational advice for each stage.
 
-#### 5.2 Catalyst calendar
+#### 5.2 Catalyst chain (催化剂链, v3.1升级 — 盲区修正)
 
-Build a time-table of upcoming catalysts with importance ratings (★ to ★★★★★).
+**核心理念**：没有"买入并持有"，只有**催化剂链**。每个品种的未来应该用一串可验证的催化剂事件来描述——市场是逐层定价的，每验证一层，定价向上一层。
 
-   🔴 **CHECKPOINT — 第五章出口**：每个节点必须有信号阶段判定+催化剂日历。这是v3.0的强制新增章节。
+为每个深挖池标的构建三层催化剂链：
+
+```
+催化剂链 = 近期(1-2月)可验证触发 → 中期(3-4月)产能/订单验证 → 远期(5-6月)格局兑现
+```
+
+| 催化剂层 | 时间窗口 | 典型事件 | 定价含义 | 验证方式 |
+|:---|:---|:---|:---|:---|
+| 🔴 **近期触发器** | 1-2月 | 客户验证公告/季报预增/涨价函 | 市场首次定价「稀缺」逻辑 | 公司公告+产业新闻 |
+| 🟠 **中期验证器** | 3-4月 | 新产能投产/在手订单兑现/财报验证 | 市场定价「业绩兑现」 | 财报+产能数据 |
+| 🟡 **远期格局兑现** | 5-6月 | 国产替代政策落地/市占率跃升/行业拐点 | 市场定价「长期价值」 | 政策文件+行业数据 |
+
+**催化剂链构建规则**：
+1. 每层至少1个可验证事件，3层合计≥3个事件
+2. 每个事件标注：具体日期窗口 + 验证信号（什么算触发/什么算不及预期）+ 重要性（★-★★★★★）
+3. 近→中→远必须形成逻辑递进——近期触发不了，中远期的逻辑更不可能被定价
+4. 每个催化剂标注触发后的**定价升级路径**——验证后目标价应上移多少
+
+**催化剂链与供给刚性类型的关系**：
+
+| 供给刚性类型 | 近期催化剂特征 | 中期催化剂特征 | 远期催化剂特征 |
+|:---|:---|:---|:---|
+| 产能约束型 | 产能利用率数据/涨价函 | 新产线投产公告/产能爬坡数据 | 市占率提升/供需缺口收窄 |
+| 认证锁定型 | 新客户qualification通过 | 订单公告/在手订单增长 | 客户渗透率/替代进口比例 |
+| 地缘切割型 | 出口管制升级/政策信号 | 国产替代招标/进口替代数据 | 国产化率提升/出口能力建立 |
+
+**催化剂链输出格式**：
+```markdown
+## [标的名称] 催化剂链
+
+| 层级 | 时间窗口 | 事件 | 重要性 | 触发条件 | 不及预期信号 | 定价升级路径 |
+|:---|:---|:---|:---:|:---|:---|:---|
+| 🔴近期 | 2026/07 | XX客户验证公告 | ★★★★ | 公告确认通过qualification | 公告延期或失败 | 目标价+15% |
+| 🟠中期 | 2026/08-09 | 新产线投产 | ★★★★★ | 产能爬坡到50%+ | 投产延期 | 目标价+25% |
+| 🟡远期 | 2026/10-12 | 国产替代政策落地 | ★★★ | 政策文件发布 | 政策力度不及预期 | 目标价+20% |
+```
+
+**催化剂链的生命周期管理**：
+- 近期催化剂兑现 → 中期催化剂变成新的近期 → 重新评估定价是否已反映
+- 近期催化剂连续2次不及预期 → 降级观察，下调目标价
+- 所有催化剂已兑现→无新催化剂在链上 → 退出信号（利好出尽）
+
+🛑 **CHECKPOINT — 第五章出口**：每个深挖池标的必须有完整的催化剂链（3层×≥1个事件）+ 定价升级路径。催化剂链为空→不得进入第四章推荐。
 
 ### 第六章: Reverse verification (反向验证)
 
@@ -386,6 +454,9 @@ Read `references/risk-and-compliance.md` for high-risk situations.
 | 12 | 缺少监控清单 | 高频+低频分层监控是v3.0强制章节 | 第七章必须给高频（每周）+低频（每月）监控 |
 | 13 | 缺少紧缺信号六维检测 | 独立验证步骤不可省略 | 第三章必须对每个深挖池节点做六维检测 |
 | 14 | 输出纯文本报告（无HTML格式） | 关键信息不醒目，阅读体验差 | 必须用HTML可视化格式，颜色编码 |
+| 15 | 缺少供给刚性分类 | v3.1核心创新，不同类型决定催化剂路径和估值方式 | Step 1.5必须标注产能约束型/认证锁定型/地缘切割型 |
+| 16 | 催化剂日历无分层递进 | 无催化剂链=无"持有并等待"的依据 | 第五章必须输出三层催化剂链(近/中/远)+定价升级路径 |
+| 17 | 跳过供给刚性类型对四维度权重的调整 | 基础权重不适用所有类型 | Step 2必须使用Step 1.5分类对应的调整后权重 |
 
 Load only what is needed:
 

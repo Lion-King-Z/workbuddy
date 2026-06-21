@@ -100,3 +100,19 @@
 | ✅ 可读 | 原文可查看、聚宝盆、锅师信息沉淀、小说 |
 | ❌ 不可读（220030） | 叫我第一名、基业长青、深证信公告库 |
 | 未测 | 半拿铁、倪海厦（非投研，无需测）
+
+---
+
+## Skill安装策略（2026-06-21 约定）
+
+### 核心原则
+- **不预装海量 Skill**，改为按需检索
+- 老大提出新需求时，先到以下平台搜索现成 Skill
+- 命中 → 安装并记录来源
+- 未命中 → 自建 Skill 存入库中
+
+### Skill 社区检索渠道（按优先级）
+1. **SkillsMP** (https://skillsmp.com/) — 全球最大，100万+ Skill 索引
+2. **ClawHub** (https://clawhub.ai/) — OpenClaw 官方技能市场
+3. **腾讯 SkillHub** (https://skillhub.cn/) — 国内优选，中文+极速
+4. **Anthropic 官方** (https://github.com/anth...)
