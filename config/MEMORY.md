@@ -115,4 +115,5 @@
 1. **SkillsMP** (https://skillsmp.com/) — 全球最大，100万+ Skill 索引
 2. **ClawHub** (https://clawhub.ai/) — OpenClaw 官方技能市场
 3. **腾讯 SkillHub** (https://skillhub.cn/) — 国内优选，中文+极速
-4. **Anthropic 官方** (https://github.com/anth...)
+4. **Anthropic 官方** (https://github.com/anthropics/skills) — 生产级示例
+5. 其他参考：Smithery.ai、ComposioHQ Awesome List、agentskills.io
