@@ -5,14 +5,16 @@ license: MIT
 compatibility: Agent Skills-compatible clients. Best with web/search, market-data, filing, browser, and optional python3 access. Bundled scripts are local-only.
 metadata:
   author: muxu-compatible community build
-  version: "3.1.0"
-  short-description: Supply-chain bottleneck hunter v3.1 — Chokepoint Hunter 7-chapter methodology with two-step funnel screening + supply rigidity taxonomy + catalyst chain
+  version: "3.2.0"
+  short-description: Supply-chain bottleneck hunter v3.2 — Chokepoint Hunter 7-chapter methodology with two-step funnel screening + supply rigidity taxonomy + catalyst chain (E维度融入催化剂链验证，不再独立评分)
 agent_created: true
 ---
 
-# Serenity.skill
+# Serenity.skill — 产业链瓶颈投研 v3.2
 
 Turn your investment agent into a supply-chain bottleneck hunter.
+
+**v3.2 核心变更**：证据累积（E维度）不再作为独立评分维度——它太滞后了。E的信息增量逻辑已融入第五章催化剂链验证。本章Step 2的四维度（不可替代性/供应弹性/集中度/认知偏差）是产业链深度研究的打分体系，与锅师每日窄门筛股的B/G/催化剂三因子是**平行互补**关系。
 
 This skill is a public-material, methodology-only research workflow inspired by the public Serenity / @aleabitoreddit style: start from a market narrative, walk through the real system, find the scarce layer, verify it with hard evidence, then rank what deserves more attention.
 
@@ -50,9 +52,11 @@ Classify the request, then work in the matching mode.
 - **Research partner conversation**: The user wants to think, learn, or discuss. Ask tight questions and push the idea toward evidence, chain position, and failure conditions.
 - **Learning mode**: The user asks to learn the method. Ask one focused question per turn and walk from trend to system change to scarce layer to proof.
 
-## Research workflow — Chokepoint Hunter 六步法 v3.1
+## Research workflow — Chokepoint Hunter 六步法 v3.2
 
-Run this workflow for theme scans, current opportunities, and candidate rankings. The v3.1 method uses a 7-chapter structure with a two-step funnel, supply rigidity taxonomy, and catalyst chain for bottleneck screening.
+Run this workflow for theme scans, current opportunities, and candidate rankings. The v3.2 method uses a 7-chapter structure with a two-step funnel, supply rigidity taxonomy, and catalyst chain for bottleneck screening.
+
+> ⚠️ **与锅师每日窄门筛股的关系**：本章的四维度评分（不可替代性/供应弹性/集中度/认知偏差）是**产业链深度研究**的工具——用于第一次深度拆解一个品种时的完整打分。锅师每日窄门筛股的B/G/催化剂三因子是**日常信号追踪**的工具——用于每日快速评分。两者平行互补，不互相替代。深度研究用本章→日常追踪用窄门筛股。
 
 ### 第一章: Supply-chain topology decomposition (供应链拓扑拆解)
 
