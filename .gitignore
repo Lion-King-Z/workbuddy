@@ -11,4 +11,9 @@
 # 临时文件
 *.png
 *.html
-upload_ima.js
+# 调试/上传脚本
+upload_*.js
+batch_*.py
+batch_*.cjs
+dima_*.cjs
+sync-overview.md
