@@ -17,3 +17,6 @@ batch_*.py
 batch_*.cjs
 dima_*.cjs
 sync-overview.md
+
+# 个人持仓隐私 — 不入版本控制
+config/skills/每日个人复盘/templates/持仓基准档案.md
