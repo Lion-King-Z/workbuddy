@@ -1,482 +1,469 @@
 ---
 name: 产业链瓶颈投研skill
-description: Turn an investment agent into a supply-chain bottleneck hunter. Use this skill for source-backed investment research, live market/theme scans, AI/semi/technology value-chain mapping, prosperity scanning (景气度扫描), supply scarcity ranking, A-share/HK/US stock screening, thesis stress tests, and Serenity-inspired research conversations. Trigger on requests like "用 Serenity 的方式看", "深度调研", "产业链/供应链/卡点/瓶颈", "供应紧缺", "景气度扫描", "供给刚性", "紧缺标的", "A股 AI 半导体哪个最值得研究", "find unknown bottlenecks", "rank candidates", or "challenge this thesis". Outputs plain-language reasoning, ranked research priorities by scarcity (high→low), evidence chains, risks, and next verification steps. Research support only; no trade execution.
+description: 供应链瓶颈猎手。以杰华特/和林微纳深度研报为输出模板，将投资Agent变成产业链卡点定位器。输出必须包含：整体紧缺强度、关键卡点清单、紧缺信号六维评估、催化候选、时机判断、瓶颈推理链。触发词：产业链瓶颈、供应链卡点、供给刚性、紧缺信号、瓶颈猎手、chokepoint、scarcity、供应紧缺、关键卡点。
 license: MIT
-compatibility: Agent Skills-compatible clients. Best with web/search, market-data, filing, browser, and optional python3 access. Bundled scripts are local-only.
+compatibility: Agent Skills-compatible clients. Best with web/search, market-data, filing, browser, and optional python3 access.
 metadata:
-  author: muxu-compatible community build
-  version: "3.2.0"
-  short-description: Supply-chain bottleneck hunter v3.2 — Chokepoint Hunter 7-chapter methodology with two-step funnel screening + supply rigidity taxonomy + catalyst chain (E维度融入催化剂链验证，不再独立评分)
+  author: 锅师体系
+  version: "4.0.0"
+  short-description: 产业链瓶颈投研 v4.0 — 一比一复刻杰华特/和林微纳研报「维度二：供应链瓶颈分析」的输出模板与字段结构
 agent_created: true
 ---
 
-# Serenity.skill — 产业链瓶颈投研 v3.2
+# 产业链瓶颈投研skill v4.0
 
-Turn your investment agent into a supply-chain bottleneck hunter.
+> **版本说明**：v4.0 以 WorkBuddy 共享研报「杰华特 (688141)」和「和林微纳 (688661)」的**供应链瓶颈分析章节**为最高权威模板，一比一复刻其字段、表格、推理链和视觉风格。原有 Chokepoint Hunter 六步法、两步漏斗、供给刚性三分法、四维度加权评分、紧缺六维检测、催化剂链等核心方法论**全部保留**，但输出格式必须严格对齐下方模板。
 
-**v3.2 核心变更**：证据累积（E维度）不再作为独立评分维度——它太滞后了。E的信息增量逻辑已融入第五章催化剂链验证。本章Step 2的四维度（不可替代性/供应弹性/集中度/认知偏差）是产业链深度研究的打分体系，与锅师每日窄门筛股的B/G/催化剂三因子是**平行互补**关系。
+---
 
-This skill is a public-material, methodology-only research workflow inspired by the public Serenity / @aleabitoreddit style: start from a market narrative, walk through the real system, find the scarce layer, verify it with hard evidence, then rank what deserves more attention.
+## 一、核心承诺
 
-It is an independent public-methodology project. Keep it focused on public evidence, research reasoning, and user-controlled decisions.
+给定一个投资主题或单只标的，跑完供应链瓶颈研究工作流，返回一份可溯源的、结构化的瓶颈分析报告：
 
-## Core promise
+`市场叙事 → 产业链拓扑拆解 → 瓶颈点筛选 → 四维度深度评分 → 紧缺信号六维检测 → 标的定位 → 催化剂链 → 反向验证 → 监控清单`
 
-Given an investment theme and market, run a source-backed supply-chain research workflow and return a clear, plain-language answer:
+最终输出必须能直接嵌入「投资审判团【WorkBuddy】」HTML 研报的**维度二：供应链瓶颈分析**章节。
 
-`market story -> system change -> required parts -> supply-chain layers -> scarce constraints -> public companies -> evidence -> what the market may be missing -> what could prove the idea wrong`
+---
 
-The answer should feel like a sharp research partner talking through the logic in normal language.
+## 二、请求路由
 
-## Default behavior
+| 请求类型 | 处理方式 |
+|:---|:---|
+| **主题扫描** | 用户给主题（如 A股AI半导体、HBM、CPO）。先按产业链层级排序，再给出Top 3-5瓶颈节点与对应标的 |
+| **单公司瓶颈分析** | 用户给代码/公司。定位其产业链位置，识别其卡住的环节，给出关键卡点清单与纯度/弹性评估 |
+| **候选比较** | 多家公司对比时，按瓶颈强度、纯度、弹性、催化剂时间排序 |
+| **紧缺信号验证** | 针对特定产品/环节，只跑紧缺信号六维检测 |
 
-Deep research is the default.
+---
 
-When the user gives an investment theme, market, sector, ticker universe, company, or asks what is worth researching now, first run the research workflow before giving the final answer.
+## 三、研究流程 — Chokepoint Hunter 六步法 v4.0
 
-Use live sources whenever the request depends on current information: current prices, filings, earnings, announcements, orders, regulation, market structure, customer relationships, financing, or "now/latest/current/最值得买/现在/近期".
+### 数据获取优先级（T0-T4 体系）
 
-If tools are available, use web/search/filing/market-data/browser tools before ranking current securities. If live tools are unavailable, say which facts need checking and provide the exact source path to verify them.
+在执行六步法之前，先明确数据获取优先级：
 
-For theme scans, rank the supply-chain layers before ranking companies. Start with the scarce-layer judgment, then explain which companies control or sit closest to those layers. Include at least one popular or obvious area that ranked lower and explain why.
+| 数据类型 | 首选来源 | 信源等级 |
+|---|---|---:|
+| 涨价/紧缺/订单/客户认证信号 | IMA原文可查看库 → 财联社 → 证券时报/上海证券报/中国证券报 | T1 |
+| 价格/产能利用率/交期 | 通达信/东方财富/同花顺行业数据 → Wind | T2 |
+| 公司公告/定增/扩产/客户订单 | 交易所公告/公司年报/一季报 | T0 |
+| 行业格局/市占率/技术路线 | IMA原文可查看库 → 券商研报（华源/东吴/天风） | T1/T3 |
+| 海外产业链信号 | 海外巨头财报/投资者关系 → 集微网/财联社翻译 | T1/T2 |
+| 社区讨论/传闻 | 雪球/股吧/微信群 | T4（仅线索） |
 
-For deep theme scans, avoid quick-answer behavior. When tools and runtime allow, build a candidate universe of at least 20 companies and inspect at least 25 sources before final ranking. If the run is shorter or tool-limited, label the answer as an initial pass and state which source checks remain.
+---
 
-## Request router
+### 第一章：供应链拓扑拆解
 
-Classify the request, then work in the matching mode.
+1. **设定范围**：市场、主题、时间窗口（默认3-12个月）。
+2. **把叙事翻译成系统变化**：什么技术/经济变化驱动需求？哪个旧设计被拉紧？核心物理约束是什么（功耗、延迟、带宽、散热、良率、纯度、可靠性、周期、封装密度、法规、电网）？
+3. **绘制产业链ASCII图**：从终端产品向下拆到基础材料。
+   ```
+   下游需求 → 系统集成商 → 模组/子系统 → 芯片/器件 → 工艺与封装 → 设备与测试 → 材料与耗材 → 物理基础设施
+   ```
+4. **单点依赖节点识别**：给每个关键节点编号 N1/N2/N3...，标注系统角色（核心/辅助/前瞻），评估替代方案和单点依赖风险（★★★高 / ★★中 / ★低）。
 
-- **Theme scan**: The user gives a market and theme, such as A-share AI semiconductors, HK robotics, US AI power equipment, CPO, advanced packaging, glass substrates, HBM, silicon photonics, data-center power, robotics, biotech manufacturing, or defense electronics. Run the full research workflow and return priority candidates.
-- **Single-company challenge**: The user asks about one ticker/company. Determine the exact value-chain position, evidence quality, what the market may be missing, and what would make the idea weak.
-- **Candidate comparison**: The user gives several companies. Compare them by chain position, evidence strength, scarcity, valuation pressure, timing, and risk.
-- **Research partner conversation**: The user wants to think, learn, or discuss. Ask tight questions and push the idea toward evidence, chain position, and failure conditions.
-- **Learning mode**: The user asks to learn the method. Ask one focused question per turn and walk from trend to system change to scarce layer to proof.
+🔴 **CHECKPOINT**：只有 ASCII 产业链图、单点依赖节点编号、风险评级全部完成，才能进入第二章。
 
-## Research workflow — Chokepoint Hunter 六步法 v3.2
+---
 
-Run this workflow for theme scans, current opportunities, and candidate rankings. The v3.2 method uses a 7-chapter structure with a two-step funnel, supply rigidity taxonomy, and catalyst chain for bottleneck screening.
+### 第二章：瓶颈点筛选 — 两步漏斗
 
-> ⚠️ **与锅师每日窄门筛股的关系**：本章的四维度评分（不可替代性/供应弹性/集中度/认知偏差）是**产业链深度研究**的工具——用于第一次深度拆解一个品种时的完整打分。锅师每日窄门筛股的B/G/催化剂三因子是**日常信号追踪**的工具——用于每日快速评分。两者平行互补，不互相替代。深度研究用本章→日常追踪用窄门筛股。
+#### Step 1：快速筛查（1-5分）
 
-### 第一章: Supply-chain topology decomposition (供应链拓扑拆解)
+| 维度 | 1分 | 5分 | 含义 |
+|:---|:---|:---|:---|
+| 不可替代性 | 无替代 | 很多替代 | 技术壁垒高低 |
+| 集中度 | 垄断 | 充分竞争 | 供应商/客户集中程度 |
+| 供应弹性 | 无法扩产 | 容易扩产 | 扩产周期与产能弹性 |
 
-1. **Set the scope**
-   - Market: US, Hong Kong, A-share, Taiwan, Japan, Korea, Europe, global, or private-company map.
-   - Theme: AI infrastructure, semiconductors, CPO, robotics, power, materials, equipment, healthcare manufacturing, defense, or another user-given topic.
-   - Time window: infer from the request when possible. Use 3-12 months for "now" unless the user says otherwise.
+**分流规则**：
+- 🔴 **深挖池**：任一维度 ≥ 4 → 进入 Step 2
+- 🟡 **边缘池**：两个维度 = 3 → 记录原因，暂持
+- ⚪ **排除**：全部 ≤ 2 → 不进入后续
 
-2. **Translate the story into a system change**
-   - What technical or economic change is driving demand?
-   - Which old design becomes strained?
-   - Which physical constraint matters most: power, latency, bandwidth, heat, yield, purity, reliability, cycle time, packaging density, regulation, or grid connection?
+#### Step 1.5：供给刚性三分法
 
-3. **Map the value chain with ASCII visualization**
-   - Start from the terminal product and decompose downward to base materials.
-   - downstream demand → system integrators → modules/subsystems → chips/devices → process and packaging → equipment and testing → materials and consumables → physical infrastructure
-   - Render an ASCII tree diagram showing the full topology.
-
-4. **Single-point dependency node identification (单点依赖节点识别)**
-   - Assign each key node an ID (N1, N2, N3...).
-   - For each node, classify system role (核心 core / 辅助 auxiliary / 前瞻性 forward-looking).
-   - Document available alternatives and single-point dependency risk (★★★ high / ★★ medium / ★ low).
-
-   🔴 **CHECKPOINT — 第一章出口**：确认以下条件全部满足再进入第二章：
-   - [ ] ASCII产业链图已绘制，覆盖终端产品到基础材料
-   - [ ] 单点依赖节点已编号（N1-N8+），每个标注系统角色和替代方案
-   - [ ] 各节点单点依赖风险已评级（★★★/★★/★）
-
-### 第二章: Bottleneck screening — two-step funnel (瓶颈点筛选)
-
-#### Step 1: Quick screening (快速筛查, 1-5 points)
-
-Score each node on three dimensions to fast-route them into pools:
-
-- **不可替代性 (Irreplaceability)**: 1=no alternatives exist, 5=many alternatives
-- **集中度 (Concentration)**: 1=monopoly, 5=fully competitive
-- **供应弹性 (Supply elasticity)**: 1=zero expansion possible, 5=easy expansion
-
-**Routing rules**:
-- 🔴 **Deep-dive pool (深挖池)**: any dimension ≥ 4 → proceed to Step 2
-- 🟡 **Edge pool (边缘池)**: 2 dimensions = 3 → note reason, hold
-- ❌ **Excluded**: all dimensions ≤ 2 → drop
-
-Quality check: deep-dive pool should have ≥ 2 nodes (≥ 3 points ✓), edge pool reasons documented ✓.
-
-#### Step 1.5: Supply rigidity taxonomy (供给刚性分类, v3.1新增 — 盲区修正)
-
-**核心理念**：供给刚性不是单一维度。不同类型的刚性→不同的催化剂模式→不同的估值方式。必须先分类，再评分。
-
-三分法（互斥归属，选最匹配的一项）：
+每个深挖池节点必须归属且仅归属一类：
 
 | 类型 | 定义 | 典型特征 | 催化剂模式 | 估值判据 |
 |:---|:---|:---|:---|:---|
-| **产能约束型** | 物理产能是硬约束，扩产周期>18月 | 扩产需要建厂/环评/设备交期长，产能利用率已>85% | 催化剂=新产能投产公告+产能利用率数据 | P/B + 产能价值（吨产能市值） |
-| **认证锁定型** | 客户认证是硬壁垒，新进入者需2年+ | 通过下游大客户qualification是唯一入场券，试错成本极高 | 催化剂=新客户认证通过+订单公告 | P/E + 在手订单/营收比 |
-| **地缘切割型** | 贸易管制/出口限制造成供给分裂 | 国内无法进口或进口成本飙升，国内替代是唯一选项 | 催化剂=管制升级+国产替代政策落地 | 国产替代空间（进口量×单价） |
+| **产能约束型** | 物理产能硬约束，扩产周期>18个月 | 建厂/环评/设备交期长，产能利用率>85% | 新产能投产+产能利用率 | 吨产能市值 / 产能价值 |
+| **认证锁定型** | 客户认证是硬壁垒，新入者需2年+ | 通过大客户qualification是唯一入场券 | 客户认证通过+订单公告 | 在手订单/营收比 |
+| **地缘切割型** | 贸易管制/出口限制造成供给分裂 | 进口成本飙升或无法进口，国产替代唯一 | 管制升级+国产替代政策 | 进口替代空间 |
 
-**分类判定逻辑**（依次问三个问题，第一个"是"即为该类型）：
-1. 主要瓶颈是否来自物理产能限制（建厂/设备/周期）？ → 是→产能约束型
-2. 主要瓶颈是否来自客户认证/qualification壁垒？ → 是→认证锁定型
-3. 主要瓶颈是否来自贸易管制/出口限制/地缘政治？ → 是→地缘切割型
+**分类后权重调整**：
+- 产能约束型：不可替代性 35%，供应弹性 25%，集中度 20%，认知偏差 20%
+- 认证锁定型：不可替代性 30%，供应弹性 30%，集中度 25%，认知偏差 15%
+- 地缘切割型：不可替代性 30%，供应弹性 30%，集中度 15%，认知偏差 25%
 
-**与四维度评分的关系**：
-- 产能约束型 → 不可替代性维度权重提升（30%→35%），供应弹性权重下降（30%→25%）
-- 认证锁定型 → 集中度维度权重提升（20%→25%），认知偏差权重下降（20%→15%）
-- 地缘切割型 → 认知偏差维度权重提升（20%→25%），集中度权重下降（20%→15%）
+#### Step 2：深度四维度加权评分
 
-🛑 **CHECKPOINT — Step 1.5 出口**：每个深挖池节点必须有供给刚性类型标注+调整后的四维度权重。分类决定催化剂判断路径。
-
-#### Step 2: Deep 4-dimension weighted scoring (深度四维度评分)
-
-For each deep-dive pool node, score on four weighted dimensions.
-**⚠️ 权重非固定**：基础权重如下，但需根据 Step 1.5 供给刚性类型做调整（产能约束/认证锁定/地缘切割各调整±5%）：
-
-| Dimension | 基础权重 | 产能约束型 | 认证锁定型 | 地缘切割型 | What it measures |
-|-----------|:---:|:---:|:---:|:---:|------------------|
-| 不可替代性 (Irreplaceability) | 30% | **35%** | 30% | 30% | Technical壁垒, no substitute available |
-| 供应弹性 (Supply elasticity) | 30% | **25%** | 30% | 30% | Expansion cycle, capacity utilization |
-| 集中度 (Concentration) | 20% | 20% | **25%** | **15%** | Supplier concentration, customer lock-in |
-| 认知偏差 (Cognitive gap) | 20% | 20% | **15%** | **25%** | Market mispricing — is the thesis already priced in? |
-
-**Weighted total = Σ(维度得分 × 调整后权重)**
-**使用供给刚性类型对应的权重列，不使用基础权重列。**
-
-**Verdict thresholds**:
-- 🔴 **Red alert** (core bottleneck): weighted total ≥ 4.0
-- 🟠 **Orange watch** (medium bottleneck): weighted total 3.5-3.9
-- 🟡 **Yellow attention** (edge bottleneck): weighted total 3.0-3.4
-- ⚪ **White exclude** (no bottleneck): weighted total < 3.0
-
-**Source tier tagging (信源等级)**:
-- **T1**: Primary official source (filings, exchange docs, annual reports, tenders, patents)
-- **T2**: Authoritative secondary (industry associations, regulators, official statistics)
-- **T3**: Analytical sources (broker reports, financial media, industry research)
-- **-**: No clear source
-
-**Cognitive gap scoring guide (v3.0 innovation)**:
-- 5: Market completely unaware, high purity and about to ramp
-- 4: Market has初步 awareness but purity/elasticity underestimated
-- 3: Market has some awareness, partial logic priced in
-- 2: Market fully aware, main logic priced in (PE reflects it)
-- 1: Market over-aware, expectations exhausted (high risk)
-
-   🛑 **STOP — 第二章出口**：若深挖池 < 2 节点，不进入第三章，先回第一章补充节点识别。每个深挖池节点必须完成四维度评分+信源标注。
-
-### 第三章: 6-signal scarcity detection (紧缺信号六维检测)
-
-For each deep-dive pool node, run six-dimension signal detection:
-
-| Signal category | What to detect | Status |
-|-----------------|----------------|--------|
-| A. Price signal | Price trend, margin change, value uplift | 🟢 detected / ⚪ unverified |
-| B. Capacity signal | Utilization rate, expansion plan, ramp timeline | 🟢 detected / ⚪ unverified |
-| C. Customer behavior | Large-customer lock-in, certification barriers, order visibility | 🟢 detected / ⚪ unverified |
-| D. Inventory signal | Inventory turnover, stocking pressure, channel inventory | 🟢 detected / ⚪ unverified |
-| E. Investment signal | Capex, production line investment, R&D spend | 🟢 detected / ⚪ unverified |
-| F. Cross-market validation | Overseas benchmarks, value-chain cross-checks, tech roadmap confirmation | 🟢 detected / ⚪ unverified |
-
-**Alert level**:
-- 4-6 signals confirmed → 🔴 **Red alert** (scarcity confirmed)
-- 3 signals confirmed → 🟠 **Orange watch** (scarcity expectation forming)
-- 1-2 signals confirmed → 🟡 **Yellow attention** (scarcity lead)
-- 0 signals confirmed → ⚪ **White no signal**
-
-   🔴 **CHECKPOINT — 第三章出口**：每个深挖池节点必须有六维检测结果+预警等级。
-
-### 第四章: Target positioning (标的定位)
-
-#### 4.1 Three-dimension target evaluation
-
-For the final candidate companies, score on three dimensions:
-
-| Dimension | What it measures |
-|-----------|------------------|
-| 纯度 (Purity) | Core business relevance to the bottleneck theme |
-| 弹性 (Elasticity) | Value uplift potential, earnings growth, capacity elasticity |
-| 催化剂 (Catalyst) | Near-term catalyst clarity, certainty, time window |
-
-**Composite verdict**:
-- 🔴 **Core target**: Purity ≥ 4★ + Elasticity ≥ 4★ + Catalyst ≥ 4★
-- 🟠 **Key watch**: Any two dimensions ≥ 4★
-- 🟡 **Observation**: Any one dimension ≥ 4★
-- ⚪ **Excluded**: All < 4★
-
-#### 4.2 Comparable analysis
-
-Build a peer comparison table with business description, purity, elasticity, catalyst, and valuation (PE TTM).
-
-#### 4.3 Risk annotation
-
-Document: valuation risk, technology substitution risk, purity dilution, customer concentration, trade friction, capacity ramp risk.
-
-   🔴 **CHECKPOINT — 第四章出口**：每个推荐标的必须有纯度/弹性/催化剂三星评分+可比标的+风险标注。
-
-### 第五章: Timing judgment + Catalyst chain (时机判断+催化剂链)
-
-#### 5.1 Signal stage classification
-
-Classify each bottleneck node into a timing stage:
-
-- 🔴 **Scarcity confirmed**: 6 signals ≥ 4 confirmed, earnings already delivered
-- 🟠 **Scarcity expectation → confirmation transition**: Small-batch delivery, capacity about to ramp, earnings not yet reflected
-- 🟡 **Scarcity fully recognized**: Main logic priced in, PE reflects it
-- ⚪ **Scarcity not formed**: Insufficient signals, early stage
-
-Provide operational advice for each stage.
-
-#### 5.2 Catalyst chain (催化剂链, v3.1升级 — 盲区修正)
-
-**核心理念**：没有"买入并持有"，只有**催化剂链**。每个品种的未来应该用一串可验证的催化剂事件来描述——市场是逐层定价的，每验证一层，定价向上一层。
-
-为每个深挖池标的构建三层催化剂链：
-
-```
-催化剂链 = 近期(1-2月)可验证触发 → 中期(3-4月)产能/订单验证 → 远期(5-6月)格局兑现
-```
-
-| 催化剂层 | 时间窗口 | 典型事件 | 定价含义 | 验证方式 |
-|:---|:---|:---|:---|:---|
-| 🔴 **近期触发器** | 1-2月 | 客户验证公告/季报预增/涨价函 | 市场首次定价「稀缺」逻辑 | 公司公告+产业新闻 |
-| 🟠 **中期验证器** | 3-4月 | 新产能投产/在手订单兑现/财报验证 | 市场定价「业绩兑现」 | 财报+产能数据 |
-| 🟡 **远期格局兑现** | 5-6月 | 国产替代政策落地/市占率跃升/行业拐点 | 市场定价「长期价值」 | 政策文件+行业数据 |
-
-**催化剂链构建规则**：
-1. 每层至少1个可验证事件，3层合计≥3个事件
-2. 每个事件标注：具体日期窗口 + 验证信号（什么算触发/什么算不及预期）+ 重要性（★-★★★★★）
-3. 近→中→远必须形成逻辑递进——近期触发不了，中远期的逻辑更不可能被定价
-4. 每个催化剂标注触发后的**定价升级路径**——验证后目标价应上移多少
-
-**催化剂链与供给刚性类型的关系**：
-
-| 供给刚性类型 | 近期催化剂特征 | 中期催化剂特征 | 远期催化剂特征 |
+| 维度 | 含义 | 5分标准 | 1分标准 |
 |:---|:---|:---|:---|
-| 产能约束型 | 产能利用率数据/涨价函 | 新产线投产公告/产能爬坡数据 | 市占率提升/供需缺口收窄 |
-| 认证锁定型 | 新客户qualification通过 | 订单公告/在手订单增长 | 客户渗透率/替代进口比例 |
-| 地缘切割型 | 出口管制升级/政策信号 | 国产替代招标/进口替代数据 | 国产化率提升/出口能力建立 |
+| 不可替代性 | 技术壁垒、替代难度 | 无替代、客户转换成本极高 | 可轻易替代 |
+| 供应弹性 | 扩产周期、产能利用率 | 扩产极易、周期<6个月 | 无法扩产、周期>3年 |
+| 集中度 | 供应商/客户集中 | 分散竞争 | 高度垄断或单一客户 |
+| 认知偏差 | 市场是否已定价 | 市场完全 unaware，即将催化 | 市场已过度定价 |
 
-**催化剂链输出格式**：
+**评分阈值**：
+- 🔴 **Red alert**：加权总分 ≥ 4.0
+- 🟠 **Orange watch**：3.5-3.9
+- 🟡 **Yellow attention**：3.0-3.4
+- ⚪ **White exclude**：< 3.0
+
+---
+
+### 第三章：紧缺信号六维检测
+
+每个深挖池节点必须按以下六维检测：
+
+| 维度 | 检测内容 | 状态 |
+|:---|:---|:---:|
+| **① 价格信号** | 价格趋势、利润率变化、价值提升 | ✅触发 / ⚪未验证 |
+| **② 产能信号** | 产能利用率、扩产计划、爬坡时间 | ✅触发 / ⚪未验证 |
+| **③ 客户行为** | 大客户锁定、认证壁垒、订单可见度 | ✅触发 / ⚪未验证 |
+| **④ 库存/交期** | 库存周转、备货压力、渠道库存、交期 | ✅触发 / ⚪未验证 |
+| **⑤ 投资信号** | 资本开支、产线投资、研发投入 | ✅触发 / ⚪未验证 |
+| **⑥ 跨市场验证** | 海外基准、产业链交叉验证、技术路线图 | ✅触发 / ⚪未验证 |
+
+**预警等级**：
+- 4-6个触发 → 🔴 红色预警（紧缺确认）
+- 3个触发 → 🟠 橙色预警（预期形成）
+- 1-2个触发 → 🟡 黄色关注（紧缺线索）
+- 0个触发 → ⚪ 无信号
+
+---
+
+### 第四章：标的定位
+
+对最终候选公司，从三个维度评分：
+
+| 维度 | 含义 | 评分 |
+|:---|:---|:---:|
+| 纯度 | 主营业务与瓶颈主题的相关度 | ★1-5 |
+| 弹性 | 价值提升潜力、盈利增长、产能弹性 | ★1-5 |
+| 催化剂 | 近期催化剂清晰度、确定性、时间窗口 | ★1-5 |
+
+**综合判定**：
+- 🔴 核心标的：纯度≥4★ 且 弹性≥4★ 且 催化剂≥4★
+- 🟠 重点观察：任意两项≥4★
+- 🟡 观察：任意一项≥4★
+- ⚪ 排除：全部<4★
+
+---
+
+### 第五章：时机判断 + 催化剂链
+
+#### 5.1 信号阶段分类
+
+- 🔴 **紧缺确认**：6维中≥4触发，业绩已兑现
+- 🟠 **紧缺确认→预期过渡**：小批量交付、产能即将爬坡、业绩尚未反映
+- 🟡 **紧缺已被充分认知**：主逻辑已定价，PE已反映
+- ⚪ **紧缺未形成**：信号不足，早期阶段
+
+#### 5.2 催化剂链（近/中/远三层）
+
+| 层级 | 时间窗口 | 典型事件 | 验证方式 | 定价含义 |
+|:---|:---|:---|:---|:---|
+| 🔴 近期触发 | 1-2个月 | 客户验证/季报预增/涨价函 | 公告+产业新闻 | 市场首次定价「稀缺」 |
+| 🟠 中期验证 | 3-4个月 | 新产能投产/订单兑现/财报 | 财报+产能数据 | 市场定价「业绩兑现」 |
+| 🟡 远期格局 | 5-6个月 | 政策落地/市占率跃升/行业拐点 | 政策文件+行业数据 | 市场定价「长期价值」 |
+
+**构建规则**：
+1. 每层至少1个可验证事件，3层合计≥3个
+2. 每个事件标注：时间窗口 + 验证信号 + 触发/不及预期标准 + 重要性★
+3. 近→中→远必须逻辑递进
+4. 每个催化剂标注触发后的**定价升级路径**（如目标价+15%）
+
+---
+
+### 第六章：反向验证
+
+1. 替代技术路线图概率
+2. 海外巨头产能过度释放影响
+3. 下游需求不及预期情景
+4. 盲区自检：是否低估边缘池？是否漏掉非主流卡位？是否存在确认偏误？
+
+---
+
+### 第七章：监控清单
+
+**高频（每周）**：股价/成交量、板块热度、海外标杆、行业新闻。
+
+**低频（每月）**：业绩预告、产能爬坡进度、下游出货指引、分析师覆盖变化、竞争格局变化。
+
+---
+
+## 四、研报输出模板 — 维度二：供应链瓶颈分析
+
+> **强制要求**：当本 Skill 作为独立输出或嵌入「投资审判团【WorkBuddy】」时，瓶颈分析章节必须严格按以下模板输出。字段名、表格列数、顺序不得改动。
+
+### 4.1 章节标题
+
 ```markdown
-## [标的名称] 催化剂链
+## ⛓️ 维度二：供应链瓶颈与卡点分析
 
-| 层级 | 时间窗口 | 事件 | 重要性 | 触发条件 | 不及预期信号 | 定价升级路径 |
-|:---|:---|:---|:---:|:---|:---|:---|
-| 🔴近期 | 2026/07 | XX客户验证公告 | ★★★★ | 公告确认通过qualification | 公告延期或失败 | 目标价+15% |
-| 🟠中期 | 2026/08-09 | 新产线投产 | ★★★★★ | 产能爬坡到50%+ | 投产延期 | 目标价+25% |
-| 🟡远期 | 2026/10-12 | 国产替代政策落地 | ★★★ | 政策文件发布 | 政策力度不及预期 | 目标价+20% |
+👤 瓶颈猎手
+
+**整体紧缺强度：{强紧缺/中等紧缺/弱紧缺} ({X.X}/5.0)** ｜ 标的定位：核心标的 纯度★★★★ 弹性★★★★★
 ```
 
-**催化剂链的生命周期管理**：
-- 近期催化剂兑现 → 中期催化剂变成新的近期 → 重新评估定价是否已反映
-- 近期催化剂连续2次不及预期 → 降级观察，下调目标价
-- 所有催化剂已兑现→无新催化剂在链上 → 退出信号（利好出尽）
+### 4.2 关键卡点清单
 
-🛑 **CHECKPOINT — 第五章出口**：每个深挖池标的必须有完整的催化剂链（3层×≥1个事件）+ 定价升级路径。催化剂链为空→不得进入第四章推荐。
+必须输出表格，列名固定为：
 
-### 第六章: Reverse verification (反向验证)
+| 卡点节点 | 紧缺强度 | 影响程度 | 缓释时间 |
+|:---|:---:|:---|:---:|
+| ① {卡点名称}<br>· {定量证据1}<br>· {定量证据2} | {X.X}/5 🔴/🟡 | {结构性紧缺/直接决定盈利/影响利润率/其他} | {>2年/2027年/持续/其他} |
+| ② ... | ... | ... | ... |
+| ③ ... | ... | ... | ... |
 
-Stress-test the thesis:
+**表格规范**：
+- 每个卡点节点必须包含至少2条定量证据，用 `·` 分隔
+- 紧缺强度用 `X.X/5` + 颜色符号（🔴 ≥4.0，🟠 3.5-3.9，🟡 3.0-3.4）
+- 影响程度必须说明该卡点如何传导到公司盈利
+- 缓释时间必须给出具体年份或时间范围
+- 底部标注来源：`来源：瓶颈分析师报告，信源 {等级} {日期}`
 
-1. **Substitute technology roadmap probability**: For each alternative, assess status, impact, and probability (high/medium/low) with time window.
-2. **Overseas giant capacity over-release**: Analyze whether overseas leaders expanding helps or hurts.
-3. **Downstream demand shortfall scenarios**: Probability and impact table.
-4. **Blind-spot self-check**:
-   - Are edge-pool nodes underestimated?
-   - Are there "off-mainstream-narrative but strong卡位" links missed?
-   - Is there confirmation bias in search keywords?
+### 4.3 紧缺信号六维评估
 
-### 第七章: Monitoring checklist (监控清单)
+必须输出表格，列名固定为：
 
-#### 7.1 High-frequency indicators (weekly)
+| 维度 | 评估 | 说明 |
+|:---|:---:|:---|
+| ① 价格信号 | ✅ 触发 / ⚪ 未验证 | {具体价格证据} |
+| ② 产能信号 | ✅ 触发 / ⚪ 未验证 | {产能利用率/扩产/关闭等证据} |
+| ③ 客户行为 | ✅ 触发 / ⚪ 未验证 | {客户催货/交期/认证等证据} |
+| ④ 库存/交期 | ✅ 触发 / ⚪ 未验证 | {库存/交期变化证据} |
+| ⑤ 投资信号 | ✅ 触发 / ⚪ 未验证 | {资本开支/股东投资/研发等证据} |
+| ⑥ 跨市场验证 | ✅ 触发 / ⚪ 未验证 | {海外巨头/全球价格/跨市场证据} |
 
-Stock price/volume, sector heat, overseas benchmark stock, industry news — with monitoring method and alert signals.
+**规范**：
+- 六行必须全部列出，不能省略
+- 评估只能写 `✅ 触发` 或 `⚪ 未验证`
+- 说明必须包含具体数据/事件和来源
+- 底部总结：`六维紧缺信号：{X}/6 触发 → {红色/橙色/黄色/白色}预警`
 
-#### 7.2 Low-frequency indicators (monthly)
+### 4.4 催化候选
 
-Earnings pre-announcements, capacity ramp progress, downstream shipment guidance, analyst coverage changes, competitive landscape shifts.
+```markdown
+### 催化候选
 
-   🛑 **STOP — 第七章出口**：每个推荐标的必须有高频+低频监控清单。这是v3.0的强制新增章节。
+1. **{催化事件1} — {时间窗口}（★{1-5}）**
+   {具体描述，包含可验证指标}
 
-## Prosperity scan integration (景气度扫描集成)
+2. **{催化事件2} — {时间窗口}（★{1-5}）**
+   {具体描述}
 
-The v2.0 prosperity scan (景气度×供给刚性) is now integrated into Step 1 quick screening as part of the three-dimension scoring. The v3.0 four-dimension deep scoring supersedes the v2.0 star-multiply method for deep-dive nodes.
+3. **{催化事件3} — {时间窗口}（★{1-5}）**
+   {具体描述}
+```
 
-For theme scans that need a quick layer-level scarcity ranking before company analysis, the v2.0 star table is still valid as a fast-preview tool:
+**规范**：
+- 至少3个催化候选
+- 每个必须包含：事件名称、时间窗口、重要性星级、具体描述
+- 重要性星级用 ★1-5
 
-| 排名 | 环节 | 景气度 | 供给刚性 | 紧缺分 | 最稀缺标的 | 定量数据 |
-|:----:|------|:------:|:--------:|:------:|------------|----------|
-|  1   | ...  |  ★★★★  |  ★★★★★   |  20/25 | ...        | ...      |
+### 4.5 时机判断
 
-But for any node that enters the deep-dive pool, the v3.0 four-dimension weighted scoring is authoritative.
+```markdown
+### 时机判断
 
-## Company universe and evidence (integrated into 第四章)
+当前处于"{阶段}"向"{阶段}"过渡阶段。{1-2段定量分析，说明当前股价/预期是否已经定价该瓶颈，以及未来3-6个月的关键验证窗口。}
+```
 
-The v2.0 steps 5-6 (build company universe, gather evidence) are now integrated into 第四章 Target positioning:
+### 4.6 瓶颈推理链
 
-- **Company universe**: Build from deep-dive pool nodes. For broad theme scans, aim for at least 20 candidates before filtering to final 3-7. Classify each: controls the scarce layer, supplies it, benefits from the trend, weak control, or mainly a story.
-- **Evidence grading**: Integrated into 第二章 Step 2 source-tier tagging (T1/T2/T3) and 第三章 6-signal detection. Every top-3 candidate must have at least 1 T1 source (filing/exchange/annual report). Pure T3-only candidates are downgraded to "待验证".
-- **Scoring script**: Use `scripts/serenity_scorecard.py` for repeatable scoring when Python is available.
+```markdown
+### 瓶颈推理链
 
-## Evidence standards
+{用1-3段话说明卡点之间的逻辑关系。例如：}
 
-For every top candidate in a current stock ranking, aim for:
+三个卡点形成"{比喻}"式利润挤压：
+上游 {涨价/紧缺} → 中游 {产能无法扩张} → 下游 {客户集中/议价空间有限}。
+供需两端：{需求端证据} 确定性强，但 {供给端证据} 严重受限。
+```
 
-- a plain-language answer to "what exactly does this company constrain?";
-- at least two concrete evidence points;
-- at least one strong source when possible: filing, exchange document, company IR, transcript, regulator/project document, patent/standard, or official order/contract;
-- a clear note on evidence strength: strong, medium, weak, or unverified lead;
-- the main reason the judgment could be wrong.
+---
 
-For current market claims, never rely only on memory.
+## 五、与上下游 Skill 的衔接
 
-Read `references/evidence-ladder.md` for source grading. Read `references/market-source-playbook.md` for US/HK/A-share/Taiwan/Japan/Korea/Europe source paths.
+### 5.1 与「景气度skill」衔接
 
-## Communication style
+- 输出 `整体紧缺强度 (X.X/5.0)` 和 `标的定位` 给景气度分析师做 L 分级参考
+- 关键卡点中的「缓释时间」直接影响「景气度skill」的催化剂链时间窗口
+- 六维紧缺信号触发数量影响「景气度skill」的确定性判定
 
-Sound like a direct investment research partner:
+### 5.2 与「pe-valuation-analyst」衔接
 
-- lead with the judgment;
-- start theme scans with the scarce layers worth prioritizing;
-- explain the reasoning chain in normal language;
-- use tables only when they improve comparison;
-- be skeptical of hype and crowded stories;
-- give strong views when the evidence supports them;
-- say exactly which proof is missing when the evidence is weak;
-- respond in the user's language;
-- use Chinese for Chinese market prompts unless the user asks otherwise.
+- 瓶颈强度 ≥ 4.0（🔴）时，给 PE 分析师发送「估值溢价」信号
+- 关键卡点中的客户认证、产能爬坡时间，是 PE 分析师「催化估值」时间窗口的核心输入
+- 瓶颈推理链中的「利润挤压」逻辑，应被 PE 分析师纳入「增速持续性检验」
 
-Avoid report-like stiffness. Avoid jargon in final answers unless the user uses it first.
+---
 
-Use plain phrases:
+## 六、信源分级体系（T0-T4）
 
-- "产业链卡点" or "scarce layer" instead of "chokepoint" when writing Chinese.
-- "市场可能没看清的地方" instead of "mispricing".
-- "接下来可能让市场重新定价的事情" instead of "catalyst".
-- "什么情况说明这个判断错了" for failure conditions.
-- "优先研究名单" instead of "watchlist".
-- "反方理由" or "最大风险" instead of "bear case".
+> **v4.0 对齐信源检查 v3.0**：本 Skill 采用 T0-T4 子分级体系。T1 级强公信力渠道优先从 IMA「原文可查看【浑水调研】」、财联社（cls.cn）、证券时报/上海证券报/中国证券报原文获取。如用户体系同时使用 A/B+/B/C 体系，可按以下映射表转换。
 
-When users ask "which is worth buying", give a ranked research priority and explain the decision chain. Keep trading decisions with the user.
+### 主分级表
 
-For theme scans, the first answer block should usually look like:
+| 等级 | 子级 | 定义 | 典型示例 |
+|:---:|:---:|:---|:---|
+| **T0** | T0-1 | 证监会指定披露平台原文 | 巨潮资讯、上交所、深交所、北交所 |
+| **T0** | T0-2 | 公司法定公告/定期报告原文 | 年报、一季报、定增公告、问询回复 |
+| **T0** | T0-3 | 海外法定披露原文 | SEC EDGAR、HKEX 披露易 |
+| **T0** | T0-4 | 中国官方宏观/行业统计原文 | 国家统计局、央行、工信部 |
+| **T1** | T1-1 | IMA 原文可查看库 | 原文可查看【浑水调研】KB ID `Y11UpEfiPNaF5OAkYKkUIfkFFx2RvQwmwMANh9Ic3wV0=` |
+| **T1** | T1-2 | 权威财经媒体深度/原文 | 财联社深度、证券时报、上海证券报、中国证券报 |
+| **T1** | T1-3 | 财经快讯/电报 | 财联社电报、金十数据、华尔街见闻快讯 |
+| **T1** | T1-4 | 行业垂直媒体深度 | 集微网、半导体行业观察、高工锂电、隆众资讯 |
+| **T1** | T1-5 | 公司官方 IR/业绩说明会 | 公司官网投资者关系、业绩说明会纪要、官方公众号 |
+| **T2** | T2-1 | 主流金融数据终端 | Wind、通达信、东方财富、同花顺、Bloomberg |
+| **T2** | T2-2 | 官方统计数据库 | 国家统计局、中汽协、乘联会、海关总署 |
+| **T2** | T2-3 | 海外官方宏观数据 | FRED、BLS、BEA、EIA |
+| **T3** | T3-1 | 第三方产业研究机构 | IDC、Yole、Gartner、TrendForce |
+| **T3** | T3-2 | 券商研报 | 华源证券、东吴证券、天风证券 |
+| **T3** | T3-3 | 机构电话会/专家纪要（可溯源） | 浑水调研电话会纪要、专家访谈 |
+| **T3** | T3-4 | 行业白皮书/招股书引用 | 行业协会白皮书、招股书行业章节 |
+| **T4** | T4-1 | 社区讨论 | 雪球、股吧、Reddit |
+| **T4** | T4-2 | 社交/自媒体 | 微信群、知乎、自媒体号 |
+| **T4** | T4-3 | AI生成/低质聚合内容 | 百家号、搜狐号、网易号 |
 
-`Start with the layers: [layer 1], [layer 2], [layer 3]. The best research path is to find who controls the hard-to-scale parts.`
+### 与 A/B+ 体系映射
 
-Chinese:
+| T0-T4 | A/B+ 映射 |
+|:---:|:---:|
+| T0 | A |
+| T1-1 / T1-2 / T1-4 / T1-5 | B+ |
+| T1-3 | B |
+| T2 | B+ / B |
+| T3-1 / T3-2 / T3-4 | C / B |
+| T3-3 | B（浑水调研可溯源原文） |
+| T4-1 / T4-2 | D / E |
+| T4-3 | C- |
 
-`先排产业链层级，再排公司。我会优先看这几层：[层级 1]、[层级 2]、[层级 3]。原因是这些地方更接近真实扩产约束。`
+### 强制规则
 
-For A-share AI semiconductor scans, a strong opening can be:
+- T0 与 T1-1/T1-2/T1-4/T1-5 为**结论级信源**，可直接用于投资结论。
+- T1-3（快讯）为**数据级信源**，重要数据需 T1-2/T2 交叉验证。
+- T2 为**数据级信源**，可直接用于行情、财务、估值数据。
+- T3 为**参考级信源**，需与 T0/T1/T2 交叉验证后使用。
+- T4 为**线索级信源**，**禁止写入结论**，必须反向验证升级为 T0-T2 后方可使用。
+- 所有关键判断必须 `✅双重验证`（≥2个独立信源，且至少一个 T0/T1/T2）。
 
-`先看带宽和工艺约束，再看纯算力芯片。AI 需求继续扩张时，先紧起来的往往是内存互连、CMP/减薄、刻蚀和耗材这些决定供给能不能爬坡的环节。`
+### 交叉验证规则
 
-The company ranking should usually include a field or sentence for:
+| 结论类型 | 最低信源要求 |
+|:---|:---|
+| 直接写入结论 | ≥1个 T0/T1-1/T1-2；或 ≥2个独立 T1-3/T2/T3 |
+| 紧缺/涨价/订单判断 | ≥1个 T1 + ≥1个 T2（独立来源） |
+| 定量数据引用 | 至少 T2 及以上，且数据在有效期内 |
+| 估值参数（PE/PS/增速） | ≥2个独立 T2/T3，或 1个 T2 + 1个 T3 |
 
-`what it constrains / where it sits / why it ranks here / evidence / main risk`
+**独立性判定**：同一媒体的多个报道只算 1 个独立信源；同一事件的公司公告 + 财联社报道 = 2 个独立来源。
 
-Chinese:
+### 时效性衰减规则
 
-`卡住的环节 / 产业链位置 / 排序原因 / 证据 / 主要风险`
+| 数据类型 | 有效期 | 过期后处理 |
+|:---|:---|:---|
+| 年报/半年报 | 6 个月 | 仍为 T0，但需标注报告期并检查更新 |
+| 季报/公告 | 3 个月 | 仍为 T0，但需检查后续更新 |
+| 产能/价格/交期数据 | 1 个月 | 降级一档，需重新确认 |
+| 快讯/电报 | 1 周 | 过期需重新确认 |
+| 券商研报一致预期 | 3 个月 | 过期需检查预期修正 |
+| 行业数据（IDC/Yole 等） | 6 个月 | 过期需标注报告期 |
 
-Keep value-chain layers granular. Split mixed buckets such as "AI chips / CPU / GPU / IP / EDA" into smaller groups when the economics differ: compute chips, EDA/IP, memory/storage, equipment, materials, testing, packaging, optical links, PCB/CCL, power and cooling.
+### AI 生成内容检测
 
-## Research partner protocol
+| 平台/类型 | 默认等级 | 处理规则 |
+|:---|:---:|:---|
+| 百家号/搜狐号/网易号/新浪看点 | **T4-3** | 大量 AI 批量生成，默认禁止入结论 |
+| 知乎专栏/无署名公众号 | **T4-2** | 质量参差，需溯源 |
+| 财联社/东方财富标注"转载" | 按原出处定级 | 转载平台不改变原文等级 |
 
-In conversation mode, push the user from story to evidence.
+**触发 AI 检测的关键词**：
+- "综上所述""值得注意的是""业内人士认为""分析人士指出" 但无具体人名/机构名
+- "据报道""有消息称""据悉" 但无具体出处
+- 标题党 + 无具体数据："震惊""重磅""突发""深夜"
+- 同一事件在多平台出现高度雷同段落
 
-Useful questions:
+触发后先按 T4-3 处理，必须回溯到 T0/T1 原始出处，否则禁止入结论。
 
-- What exactly changed in the system?
-- Which layer becomes harder to scale?
-- Why would customers struggle to route around this company?
-- What public evidence proves customer urgency?
-- Is this company controlling a scarce layer, supplying one, or only benefiting from the theme?
-- What does the market currently seem to price it as?
-- What one fact would make you downgrade the idea?
+### IMA 原文库使用规则
 
-Keep each turn focused. Ask one main question when the user wants guidance.
+- IMA KB ID：`Y11UpEfiPNaF5OAkYKkUIfkFFx2RvQwmwMANh9Ic3wV0=`（约43K条原文）
+- 调用前先通过 `ima-mcp` 的 `search_knowledge` 做标题预过滤（免费）。
+- 单日 `get_media_info` 调用不得超过 10 次；只对 Top 5-8 条命中关键词的候选调用。
+- 遇到 **220021（配额耗尽）** 立即停止，转 WebSearch 分级搜索；IMA 原文库内容**不降级**，标注"待 IMA 原文验证"。
+- 遇到 **220030（权限不足）** 仅使用标题搜索。
 
-Read `references/serenity-dialogue-protocol.md` when the user wants ongoing discussion or method training.
+### WebSearch 分级搜索（T0-T4 目标）
 
-## Cross-market adaptation
+```
+第一级（T0/T1）：
+  allowed_domains=[
+    "cninfo.com.cn", "sse.com.cn", "szse.cn", "bse.cn",
+    "cls.cn", "stcn.com", "cs.com.cn", "eastmoney.com",
+    "jiweinet.com"
+  ]
 
-The economic logic transfers across markets. The source toolkit changes.
+第二级（T2/T3）：不加 domain，优先通达信/东方财富/同花顺/Wind/券商研报
 
-- **A-shares**: 年报、半年报、季报、临时公告、交易所问询函、互动易/上证 e 互动、招投标、环评/能评、地方项目备案、专利、客户认证、海关数据、应收/存货/现金流、关联交易。
-- **Hong Kong**: HKEX filings, annual/interim reports, placings, connected transactions, mainland policy exposure, liquidity, Southbound eligibility.
-- **US**: SEC filings, earnings transcripts, investor presentations, S-3/ATM risk, insider transactions, customer concentration, estimate gaps.
-- **Taiwan/Japan/Korea/Europe**: local exchange filings, monthly revenue or operating data where available, company IR, trade journals, export statistics, customer cross-checks, FX/geopolitical exposure.
+第三级（T4）：兜底无 domain 限制 → 仅作线索，不可入结论
+```
 
-Read `references/market-source-playbook.md` when market-specific evidence matters.
+### T1 级强公信力渠道使用优先级
 
-## Risk boundary
+1. **IMA 原文可查看【浑水调研】**（KB ID：`Y11UpEfiPNaF5OAkYKkUIfkFFx2RvQwmwMANh9Ic3wV0=`）：43K+ 条原文，可溯源原文优先级最高
+2. **财联社（cls.cn）**：权威财经快讯+深度，产业链/政策/订单信号首选
+3. **证券时报/上海证券报/中国证券报**：权威纸媒数字版
+4. **集微网**：半导体行业垂直深度
 
-Give research support, ranking, and reasoning. Keep final responsibility with the user.
+---
 
-Avoid:
-
-- guaranteed return language;
-- direct buy/sell commands;
-- hype around illiquid names;
-- rumor-based recommendations;
-- material non-public information;
-- invented prices, filings, customers, contracts, or market caps.
-
-Use concise language when needed:
-
-`I will rank this by research priority. The trading decision is yours.`
-
-Read `references/risk-and-compliance.md` for high-risk situations.
-
-## 异常与边界条件
+## 七、失败模式与异常处理
 
 | 触发条件 | 一线修复 | 仍失败兜底 |
-|----------|----------|-----------|
-| WebSearch 未返回定量数据 | 切换搜索词 + 指定数据源（统计局/行业协会/公司公告） | 该环节标注「数据待验证」，降级到附录 |
-| 候选公司 < 20 家（A股/港股深度扫描） | 放宽到上下游相邻环节继续搜 | 标注为「初筛结果，覆盖率不足」 |
-| 信源冲突（两个 A 级信源矛盾） | 暂停输出，标注矛盾并等待用户确认 | — |
-| `serenity_scorecard.py` 不可用 | 手工按步骤4b格式输出评分表 | — |
-| 用户给的行业在 A 股无直接标的 | 扩到港股/美股相关标的，或向上游通用技术层找 | 告知用户「该行业在 A 股无纯正标的，已扩至跨市场」 |
-| 产业链层的供给约束信息陈旧（>6个月） | WebSearch 搜索最新产能公告/投产新闻 | 标注「信息基于 X 月前数据，建议验证」 |
-| 景气度 ★ 和供给刚性 ★ 评分争议（同层不同分析员分歧大） | 记录分歧点和双方证据 | 用区间标注（如「★★★★-★★★★★」） |
-| IMA/信源 API 不可达 | 降级为纯 WebSearch + 本地已有研究对照 | 标注「信源受限，结论未经完整交叉验证」 |
+|:---|:---|:---|
+| 无法找到定量瓶颈证据 | 放宽搜索词到上游材料/设备/客户 | 输出「紧缺信号待验证」并降级到黄色 |
+| 六维检测中≥3项未验证 | 用 WebSearch 专项搜索该维度 | 标注「该维度证据不足，结论置信度下降」 |
+| 关键卡点 < 3 个 | 向上游/下游相邻环节扩展 | 标注「瓶颈节点覆盖率不足，建议补充研究」 |
+| 信源冲突（T0/T1 矛盾） | 暂停输出，列出矛盾点 | 等待用户确认后裁决 |
+| 用户只问单一环节 | 跳过产业链拓扑，只做六维检测 | 明确标注「单环节分析，未做完整产业链拆解」 |
 
-## 禁止行为（反例黑名单）
+---
+
+## 八、禁止行为（反例黑名单）
 
 | # | 禁止项 | 原因 | 正确做法 |
-|---|--------|------|----------|
-| 1 | 未经定量验证打「极度紧缺」评级 | 纯定性判断不可靠 | 第二章 Step 2 强制四维度评分+定量依据 |
-| 2 | 跳过稀缺层排序直接列公司 | 用户看不到系统逻辑 | 先排层再排公司 |
-| 3 | 仅凭卖方研报标题（T3级）做结论 | 分析师研报需交叉验证 | 升至 T1/T2 级才能引用 |
-| 4 | 捏造不存在的价格/产能/交期数据 | 误导投资决策 | 标注来源，未知就写「未获取」 |
-| 5 | 对顺风层做昊天层级推荐 | 资源约束和确定性差一个量级 | 分层标注层次差异 |
-| 6 | 省略定量数据标注 | 读者无法判断数据可信度 | 每行必须标注数据来源日期 |
-| 7 | 同分环节不明确排序理由 | 排名无意义 | 同分必须写「并列原因：XXX」 |
-| 8 | 多头排列标的在反方论证中轻描淡写 | 反向压力测试无效 | 反方论据必须与正方等量篇幅 |
-| 9 | 跳过两步漏斗直接评分 | 快速筛查→深度评分的漏斗不可省略 | 必须先 Step 1 快速筛查分流，再 Step 2 深度评分 |
-| 10 | 缺少认知偏差维度评分 | v3.0核心创新，衡量市场是否已定价 | 四维度必须包含认知偏差（20%权重） |
-| 11 | 缺少时机判断章节 | 信号阶段+催化剂日历是v3.0强制章节 | 第五章必须给信号阶段判定+催化剂日历 |
-| 12 | 缺少监控清单 | 高频+低频分层监控是v3.0强制章节 | 第七章必须给高频（每周）+低频（每月）监控 |
-| 13 | 缺少紧缺信号六维检测 | 独立验证步骤不可省略 | 第三章必须对每个深挖池节点做六维检测 |
-| 14 | 输出纯文本报告（无HTML格式） | 关键信息不醒目，阅读体验差 | 必须用HTML可视化格式，颜色编码 |
-| 15 | 缺少供给刚性分类 | v3.1核心创新，不同类型决定催化剂路径和估值方式 | Step 1.5必须标注产能约束型/认证锁定型/地缘切割型 |
-| 16 | 催化剂日历无分层递进 | 无催化剂链=无"持有并等待"的依据 | 第五章必须输出三层催化剂链(近/中/远)+定价升级路径 |
-| 17 | 跳过供给刚性类型对四维度权重的调整 | 基础权重不适用所有类型 | Step 2必须使用Step 1.5分类对应的调整后权重 |
+|---:|---|---|---|
+| 1 | 未经定量证据打「极度紧缺」 | 定性不可靠 | 必须有关键卡点清单+六维检测 |
+| 2 | 跳过两步漏斗直接评分 | 漏斗不可省略 | 先 Step 1 快速筛查，再 Step 2 深度评分 |
+| 3 | 关键卡点清单无定量证据 | 无法复算 | 每个卡点至少2条定量证据 |
+| 4 | 六维检测省略任意维度 | 独立验证步骤不可省略 | 六行必须全部输出 |
+| 5 | 催化剂链无具体时间窗口 | 无法验证 | 每个催化必须标注1-2月/3-4月/5-6月 |
+| 6 | 未标注瓶颈强度来源 | 读者无法判断 | 每个卡点/六维评估必须标注信源等级 |
+| 7 | 捏造价格/产能/交期数据 | 误导决策 | 未知写「未获取」，不能编数据 |
+| 8 | 只输出结论不输出推理链 | 失去可解释性 | 必须给出瓶颈推理链 |
+| 9 | 忽略与PE/景气度的衔接 | 孤立分析无意义 | 必须输出对下游 Skill 的输入信号 |
+| 10 | 使用 T4 信源写入结论 | 可信度不足 | T4 只能作为线索 |
 
-Load only what is needed:
+---
 
-- `references/deep-research-workflow.md` — detailed workflow for source-backed theme scans.
-- `references/evidence-ladder.md` — source grading and evidence standards.
-- `references/market-source-playbook.md` — source paths by market.
-- `references/serenity-dialogue-protocol.md` — research partner and learning-mode behavior.
-- `references/output-style-and-language.md` — plain-language output contract.
-- `references/public-profile-and-evaluation.md` — public profile, outside evaluation, and reliability notes.
-- `references/research-sources.md` — source map used by the project.
-- `references/risk-and-compliance.md` — investment research boundaries.
-- `assets/thesis-template.md` — reusable thesis memo template.
-- `assets/bottleneck-scorecard.json` — JSON input template for the scorecard.
-- `assets/research-prompt-pack.md` — prompts for users who want explicit task starters.
-- `scripts/serenity_scorecard.py` — local scoring script.
-- `scripts/validate_skill.py` — local Agent Skill structure validator.
-- `examples/a-share-ai-semiconductor-demo.md` — A-share AI semiconductor example shape.
-- `examples/ai-infrastructure-chokepoint-demo.md` — end-to-end example.
-- `evals/test-cases.md` — trigger and behavior tests.
+## 九、沟通风格
+
+- 先说判断：「整体紧缺强度：强紧缺 4.0/5.0」
+- 用定量说话：每个卡点和六维评估必须有数据
+- 输出结构化：严格按照第4章模板
+- 对不确定的地方诚实标注：「未获取」「待验证」「单信源」
+- 中文输出，保持专业冷静
+
+---
+
+## Load what is needed
+
+- `scripts/serenity_scorecard.py` — 本地评分脚本（输出格式需对齐第4章模板）
+- 原有 `references/` 下文档继续有效
