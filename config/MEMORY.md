@@ -144,10 +144,12 @@
 - 命中 → 安装并记录来源
 - 未命中 → 自建 Skill 存入库中
 
-## IMA凭证（2026-06-23 刷新）
+## IMA凭证（2026-06-30 刷新）
 - Client ID: `f4e6593293d85bf6afe924e5a328b220`
 - API Key: 已更新至 `~/.config/ima/api_key`（已验证 → `search_knowledge_base` 返回 `code:0`）
-- 持久化位置: `~/.config/ima/`（权限已修复，可正常读写）
+- 持久化位置: `~/.config/ima/`（文件权限已限制为当前用户读写）
+- Skill 版本: `ima-skills v1.1.7` 安装于 `~/.workbuddy/skills/ima-skills/`
+- 安全审计: P2 — 安全（仅访问 `ima.qq.com` / `*.myqcloud.com`，无自动执行/外送）
 
 ### Skill 社区检索渠道（按优先级）
 1. **SkillsMP** (https://skillsmp.com/) — 全球最大，100万+ Skill 索引
