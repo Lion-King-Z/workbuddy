@@ -6,6 +6,7 @@ description: |
   自动化：每周日晚21:00自动触发。
   version: "3.2.0"
 agent_created: true
+disable: true
 ---
 
 # 每周研判 Skill v3.2

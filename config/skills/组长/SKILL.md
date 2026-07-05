@@ -1,13 +1,19 @@
 ---
 name: 组长
-description: Supply-chain pipeline research — sequential three-step penetration. Parse a research memo to extract supply-chain materials, then run per-material bottleneck → prosperity → PE valuation pipeline. Output one MD per material, no IMA sync by default. Trigger on "组长", "流水线研究", "纵深研究", "层层穿透", "深度拆解", "产业链穿透", "材料研究", research memo with multiple supply-chain materials.
+description: Supply-chain pipeline research — sequential three-step penetration.
+  Parse a research memo to extract supply-chain materials, then run per-material
+  bottleneck → prosperity → PE valuation pipeline. Output one MD per material,
+  no IMA sync by default. Trigger on "组长", "流水线研究", "纵深研究", "层层穿透", "深度拆解",
+  "产业链穿透", "材料研究", research memo with multiple supply-chain materials.
 license: MIT
-compatibility: Agent Skills-compatible clients. Requires 产业链瓶颈投研skill, 景气度skill, pe-valuation-analyst.
+compatibility: Agent Skills-compatible clients. Requires 产业链瓶颈投研skill, 景气度skill,
+  pe-valuation-analyst.
 metadata:
   author: community build
-  version: "2.3.0"
+  version: 2.3.0
   short-description: 组长 v2.3 — 全自动三步穿透+标的三情景（乐观/中性/悲观），绝对不反问不确认，信息缺口自动搜索补齐
 agent_created: true
+disable: true
 ---
 
 # 组长

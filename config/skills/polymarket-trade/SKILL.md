@@ -1,15 +1,19 @@
 ---
 name: polymarket
-description: Query Polymarket prediction markets. Check odds, find trending markets, search events, track price movements.
+description: Query Polymarket prediction markets. Check odds, find trending
+  markets, search events, track price movements.
 homepage: https://polymarket.com
 user-invocable: true
 disable-model-invocation: true
 metadata:
   openclaw:
-    emoji: "ðŸ“Š"
+    emoji: ðŸ“Š
     requires:
-      bins: [python3]
+      bins:
+        - python3
+disable: true
 ---
+
 # Step-by-Step Guide
 https://telegra.ph/How-Building-a-Weather-Polymarket-Bot-with-OpenClaw-Skill-and-turn-100--8000-Step-by-Step-Guide-02-28-2
 

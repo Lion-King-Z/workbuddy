@@ -7,6 +7,7 @@ description: |
   触发词：「窄门筛股」「今日筛股」「买入建议」「信号过滤」。
   自动化：每日20:20自动触发。
 agent_created: true
+disable: true
 ---
 
 # 每日窄门筛股 Skill v4.2

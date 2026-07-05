@@ -1,23 +1,32 @@
 ---
 name: myquant_dev
 version: 1.0.4
-description: |
+description: >
   掘金量化 (myquant) SDK 开发助手。当用户提到以下内容时触发：
+
   - 掘金量化、myquant、gm.api
+
   - 编写或修改量化交易策略
+
   - 使用 subscribe、order_volume、context.data 等掘金 API
+
   - 调试掘金策略、回测配置
+
   - 任何与掘金终端、仿真交易、实盘交易相关的开发
-  Make sure to use this skill whenever the user mentions myquant, 掘金量化, gm.api, or wants to write/debug quantitative trading strategies for the myquant platform.
+
+  Make sure to use this skill whenever the user mentions myquant, 掘金量化, gm.api,
+  or wants to write/debug quantitative trading strategies for the myquant
+  platform.
 triggers:
-  - "掘金"
-  - "myquant"
-  - "gm.api"
-  - "量化策略"
-  - "subscribe"
-  - "order_volume"
-  - "context.data"
-  - "context.account"
+  - 掘金
+  - myquant
+  - gm.api
+  - 量化策略
+  - subscribe
+  - order_volume
+  - context.data
+  - context.account
+disable: true
 ---
 
 # 掘金量化 (myquant) 开发指南
