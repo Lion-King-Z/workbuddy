@@ -16,29 +16,17 @@ metadata:
         - IMA_OPENAPI_APIKEY
     primaryEnv: IMA_OPENAPI_CLIENTID
   security:
-    credentials_usage: >
-      This skill requires user-provisioned IMA OpenAPI credentials (Client ID
-      and API Key)
-
+    credentials_usage: |
+      This skill requires user-provisioned IMA OpenAPI credentials (Client ID and API Key)
       to authenticate with the official IMA API at https://ima.qq.com.
-
-      Credentials are ONLY sent to the official IMA API endpoint (ima.qq.com) as
-      HTTP headers.
-
-      The file-upload flow also sends requests to COS endpoints (*.myqcloud.com)
-      using
-
-      short-lived, scoped temporary credentials returned by the IMA API
-      (create_media);
-
+      Credentials are ONLY sent to the official IMA API endpoint (ima.qq.com) as HTTP headers.
+      The file-upload flow also sends requests to COS endpoints (*.myqcloud.com) using
+      short-lived, scoped temporary credentials returned by the IMA API (create_media);
       the user's Client ID / API Key are never sent to COS.
-
-      No credentials are logged, stored in files, or transmitted to any other
-      destination.
+      No credentials are logged, stored in files, or transmitted to any other destination.
     allowed_domains:
       - ima.qq.com
-      - "*.myqcloud.com"
-disable: true
+      - '*.myqcloud.com'
 ---
 
 # ima-skill
