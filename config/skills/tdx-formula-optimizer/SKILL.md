@@ -1,8 +1,6 @@
 ---
 name: tdx-formula-optimizer
-description: 通达信选股公式优化助手。解析和优化通达信公式（MA/MACD/KDJ/RSI/BOLL/筹码分布等），分析逻辑缺陷，推荐参数优化方案，生成Python回测代码。配合
-  tdx-connector 和 westockdata 做数据验证，配合掘金量化做回测执行。
-disable: true
+description: 通达信选股公式优化助手。解析和优化通达信公式（MA/MACD/KDJ/RSI/BOLL/筹码分布等），分析逻辑缺陷，推荐参数优化方案，生成Python回测代码。配合 tdx-connector 和 westockdata 做数据验证，配合掘金量化做回测执行。
 ---
 
 # 通达信选股公式优化助手

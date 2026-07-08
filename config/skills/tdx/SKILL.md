@@ -6,7 +6,6 @@ dependency:
     - mootdx[all]>=1.2.0
     - pandas>=1.3.0
     - retry>=0.9.2
-disable: true
 ---
 
 # 通达信金融数据专家
