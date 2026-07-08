@@ -44,18 +44,68 @@ Exclude the following:
 
 ### Step 1 — Mirror Self-Built Skills
 
-Clear `G:\锅师\config\skills\`, then copy every self-built skill directory from both sources:
+**⛔ 禁止全局 `rm -rf config/skills/`**（Windows git bash 下非原子操作，残留空壳导致后续 cp 嵌套）。
 
-**Source 1** — User-level: `~/.workbuddy/skills/*` (directories only, skip skill_* prefix)
-**Source 2** — Project-level: `G:\锅师\.workbuddy\skills/*` (directories only)
+正确做法：先收集源目录列表，再**逐项删除目标 + 复制**。
 
-For each skill directory, copy the entire subtree to `G:\锅师\config\skills/<name>/`.
+#### 1a — 收集 Self-Built Skill 列表
 
-**⚠️ 子目录清理**：复制完成后，清理所有嵌套的 `.git` 目录和 `.gitignore` 文件，防止干扰主 repo：
+从两个来源扫描，合并去重（用 bash for 循环，禁用 xargs——MCP 注入的环境变量过大会导致 xargs 直接报错）：
+
 ```bash
-find "G:/锅师/config/skills/" -name ".git" -type d -exec rm -rf {} + 2>/dev/null
-find "G:/锅师/config/skills/" -name ".gitignore" -type f -delete 2>/dev/null
+# 源1：用户级 ~/.workbuddy/skills/
+# 源2：项目级 G:\锅师\.workbuddy\skills/
+# 过滤：排除 skill_ 前缀、排除非目录
+# 合并去重
 ```
+
+#### 1b — 逐项复制（防嵌套）
+
+对每个 skill，**先确保目标不存在**再复制。带 `/` 的源路径要先 strip 尾随 `/`，避免 cp 行为歧义：
+
+```bash
+for d in /c/Users/Administrator/.workbuddy/skills/*/ /g/锅师/.workbuddy/skills/*/; do
+  name=$(basename "$d")
+  [[ "$name" != skill_* ]] || continue      # 跳过 marketplace skill
+  [[ -d "$d" ]] || continue                 # 只处理目录
+  rm -rf "/g/锅师/config/skills/$name"       # ⛔ 逐项删除，不留空壳
+  cp -r "${d%/}" "/g/锅师/config/skills/"    # strip尾随/，创建 config/skills/<name>/
+done
+```
+
+关键：`cp -r src_name config/skills/`（src 不带尾随 `/`）→ 创建 `config/skills/src_name/`。如果目标已存在则**放入目标内部**造成嵌套——所以前面的 `rm -rf` 是强制性前置。
+
+#### 1c — 嵌套自检
+
+复制完成后验证无嵌套：
+
+```bash
+cd "/g/锅师/config/skills"
+for d in */; do
+  outer=${d%/}
+  if [ -d "$outer/$outer" ]; then
+    echo "❌ 嵌套残留: $outer → 需修复!"
+  fi
+done
+```
+
+#### 1d — 清理 .git / .gitignore
+
+部分 skill 源含 `.git` 子目录（如 submodule），复制后必须删除，否则会被 Git 主 repo 误判为 submodule（160000 模式）：
+
+```bash
+find "/g/锅师/config/skills/" -name ".git" -type d -exec rm -rf {} + 2>/dev/null
+find "/g/锅师/config/skills/" -name ".gitignore" -type f -delete 2>/dev/null
+```
+
+#### 嵌套成因速查
+
+| 场景 | cp 行为 | 结果 |
+|:---|:---|:---|
+| `config/skills/tdx` **不存在** | `cp -r src/tdx config/skills/` → 创建 `tdx/` | ✅ 正常 |
+| `config/skills/tdx` **已存在**（空壳残留） | `cp -r src/tdx config/skills/` → 放入已存在的 `tdx/` 内部 | ❌ `tdx/tdx/` 嵌套 |
+
+全局 `rm -rf config/skills/` 在 Windows git bash 下非原子——部分子目录（只读文件/长路径）可能残留空壳。
 
 ### Step 2 — Mirror Global Memory
 
@@ -76,7 +126,7 @@ Copy `~/.workbuddy/IDENTITY.md` → `G:\锅师\config\IDENTITY.md`.
 ### Step 3 — Git Commit & Push
 
 ```bash
-cd "G:/锅师" && git add config/ && git commit -m "<描述>" && GIT_TERMINAL_PROMPT=0 git push origin HEAD:main
+cd "G:/锅师" && git add config/ && git commit -m "<描述>" && GIT_TERMINAL_PROMPT=0 git push
 ```
 
 Commit message format: describe what changed, e.g.:
