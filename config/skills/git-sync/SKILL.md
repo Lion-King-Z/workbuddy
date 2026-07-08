@@ -30,7 +30,8 @@ config/
 └── skills/             # Self-built skills only (no marketplace skill_* dirs)
     └── <skill-name>/
 
-Remote: `https://github.com/Lion-King-Z/workbuddy.git` (branch: main)
+Remote: `https://github.com/Lion-King-Z/workbuddy.git`
+Branch: `auto-optimize/20260619-2112`
 
 ## Self-Built Skill Identification
 
@@ -136,7 +137,50 @@ Commit message format: describe what changed, e.g.:
 
 ### Step 4 — Push Fallback
 
-If `git push` hangs (HTTPS auth), use GitHub MCP `push_files` tool with `owner: "Lion-King-Z"`, `repo: "workbuddy"`, `branch: "main"`.
+If `git push` hangs (HTTPS auth), use GitHub MCP `push_files` tool with `owner: "Lion-King-Z"`, `repo: "workbuddy"`, `branch: "auto-optimize/20260619-2112"`.
+
+## Cross-Device Sync（跨设备同步）
+
+当一台电脑上更新了 skill 并推送到 GitHub 后，另一台电脑需要拉取并覆盖本机 skill。
+
+### 完整流程
+
+```text
+公司电脑（F盘）                   GitHub                   家用电脑（G盘）
+                    ← push ←
+                                        pull →
+    config/skills/<name>/SKILL.md
+        │
+        │ cp 覆盖
+        ▼
+    ~/.workbuddy/skills/<name>/SKILL.md
+```
+
+### 操作步骤（复制到另一台电脑的 WorkBuddy 执行）
+
+```
+1. git pull 拉最新代码
+   仓库: https://github.com/Lion-King-Z/workbuddy
+   分支: auto-optimize/20260619-2112
+
+2. 把仓库里 config/skills/<skill名>/SKILL.md 复制覆盖到
+   ~/.workbuddy/skills/<skill名>/SKILL.md
+   （更新本机 skill 到最新版）
+
+3. 同步git
+```
+
+如果是新 skill（config/skills 里有但 ~/.workbuddy/skills 里没有），则复制整个目录：
+
+```
+cp -r config/skills/<新skill> ~/.workbuddy/skills/<新skill>
+```
+
+### 注意事项
+
+- `~/.workbuddy/skills/` 在 Windows 上对应 `C:\Users\<用户名>\.workbuddy\skills\`
+- 项目级 skill 在 `G:\锅师\.workbuddy\skills\`（或公司电脑对应的项目路径）
+- 覆盖后 WorkBuddy 无需重启，下次触发即用新版
 
 ## One-Shot Full Sync
 
