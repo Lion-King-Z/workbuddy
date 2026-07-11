@@ -38,7 +38,7 @@ commands:
 display_name: Stock Analysis
 display_name_en: Stock Analysis
 visibility: public
-disable: true
+disable: false
 ---
 
 # Stock Analysis v6.1

@@ -12,7 +12,7 @@ display_name_en: Idea Validator
 description_zh: 创业想法验证，评估问题-方案匹配度与市场机会
 description_en: Validate startup ideas with problem-solution fit and market assessment
 visibility: public
-disable: true
+disable: false
 ---
 
 # Idea Validator - Startup Idea Assessment Framework

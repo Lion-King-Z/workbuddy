@@ -38,7 +38,7 @@ metadata:
     allowed_domains:
       - ima.qq.com
       - "*.myqcloud.com"
-disable: true
+disable: false
 ---
 
 # ima-skill

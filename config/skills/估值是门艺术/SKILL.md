@@ -9,6 +9,7 @@ metadata:
   version: "1.1.0"
   short-description: 估值艺术 v1.1 — 赛道爆发判断 + 定性二维定位 + 定量PE估值的融合框架
   agent_created: true
+disable: false
 ---
 
 # 估值是门艺术 v1.1

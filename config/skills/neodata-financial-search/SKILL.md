@@ -13,7 +13,7 @@ allowed-tools: Read,Bash
 display_name: NeoData金融搜索服务
 display_name_en: Neodata Financial Search
 visibility: public
-disable: true
+disable: false
 ---
 
 # NeoData Financial Search — 自然语言通用金融数据搜索服务

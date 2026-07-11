@@ -7,7 +7,7 @@ version: 1.2.1
 display_name: AI网文创作
 display_name_en: AI Novel Writing
 visibility: public
-disable: true
+disable: false
 ---
 
 # novel-writing

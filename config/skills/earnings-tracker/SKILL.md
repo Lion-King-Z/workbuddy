@@ -7,7 +7,7 @@ version: 1.1.0
 display_name: earnings-tracker
 display_name_en: earnings-tracker
 visibility: public
-disable: true
+disable: false
 ---
 
 # Earnings Tracker - AI 驱动的财报追踪器

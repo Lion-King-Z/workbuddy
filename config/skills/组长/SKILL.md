@@ -13,7 +13,7 @@ metadata:
   version: 2.3.0
   short-description: 组长 v2.3 — 全自动三步穿透+标的三情景（乐观/中性/悲观），绝对不反问不确认，信息缺口自动搜索补齐
 agent_created: true
-disable: true
+disable: false
 ---
 
 # 组长

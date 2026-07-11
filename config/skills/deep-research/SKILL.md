@@ -18,7 +18,7 @@ display_name: deep-research
 display_name_en: deep-research
 visibility: public
 icon: https://codebuddy-platform-1258344699.cos.accelerate.myqcloud.com/public/45edac6b-2078-4678-89f3-6f9800cf5e5f/avatar/skill/au_92bccf05-0ab.png
-disable: true
+disable: false
 ---
 
 # Deep Research — 结构化深度调研工作流

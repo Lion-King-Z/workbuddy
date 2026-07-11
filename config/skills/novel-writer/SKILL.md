@@ -7,7 +7,7 @@ display_name_en: novel-writer
 description_zh: 根据大纲和角色档案生成章节正文，支持风格控制和温度调节
 description_en: Generate novel chapters from outlines with voice profiles & character cards
 visibility: public
-disable: true
+disable: false
 ---
 
 # Novel Writer - 章节正文生成器

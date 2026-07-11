@@ -51,7 +51,7 @@ description_zh: WorkRally AI 内容创作（生图、生视频、画布、素材
 description_en: "WorkRally AI content creation: image/video generation, canvas,
   asset management"
 visibility: public
-disable: true
+disable: false
 ---
 
 # WorkRally CLI (workrally)

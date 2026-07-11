@@ -7,7 +7,7 @@ version: 1.0.5
 display_name: WeStock Data
 display_name_en: WeStock Data
 visibility: public
-disable: true
+disable: false
 ---
 
 # WeStock Data

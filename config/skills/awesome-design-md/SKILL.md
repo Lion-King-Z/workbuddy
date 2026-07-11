@@ -13,7 +13,7 @@ allowed-tools: Read,Write,Bash
 display_name: awesome-design-md
 display_name_en: awesome-design-md
 visibility: public
-disable: true
+disable: false
 ---
 
 # Awesome DESIGN.md

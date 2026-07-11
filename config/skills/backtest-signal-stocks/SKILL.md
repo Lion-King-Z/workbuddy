@@ -3,7 +3,7 @@ name: backtest-signal-stocks
 description: 对研究信号推荐的股票组合进行区间回测，用 tdx_kline 获取行情、计算收益率、按主题与确定性归因，并生成带 B/E/C/G
   框架的复盘报告。当用户说"回测一下这些标的""看看这段时间表现""复盘信号选股"时触发。
 agent_created: true
-disable: true
+disable: false
 ---
 
 # Backtest Signal Stocks

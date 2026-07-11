@@ -10,7 +10,7 @@ version: 1.11.0
 homepage: https://www.gtht.com/
 allowed-tools:
   - node
-disable: true
+disable: false
 icon: https://www.google.com/s2/favicons?domain=www.gtht.com&sz=256
 display_name: lingxi-financialsearch-skill
 display_name_en: lingxi-financialsearch-skill

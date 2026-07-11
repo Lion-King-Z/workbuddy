@@ -13,7 +13,7 @@ allowed-tools: Read,Grep
 display_name: grill-me
 display_name_en: grill-me
 visibility: public
-disable: true
+disable: false
 ---
 
 # Grill Me

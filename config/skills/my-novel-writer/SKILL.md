@@ -11,7 +11,7 @@ version: 1.0.0
 display_name: my-novel-writer
 display_name_en: my-novel-writer
 visibility: public
-disable: true
+disable: false
 ---
 
 # Novel Writer 技能

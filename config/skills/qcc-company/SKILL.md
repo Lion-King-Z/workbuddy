@@ -11,7 +11,7 @@ display_name: 企查查（工商信息）
 display_name_en: Qcc Company
 visibility: public
 icon: https://codebuddy-platform-1258344699.cos.accelerate.myqcloud.com/public/45edac6b-2078-4678-89f3-6f9800cf5e5f/avatar/skill/au_44c7f07f-607.svg
-disable: true
+disable: false
 ---
 
 # 企查查（工商信息）Connector Skill

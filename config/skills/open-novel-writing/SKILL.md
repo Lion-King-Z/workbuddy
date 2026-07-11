@@ -9,7 +9,7 @@ display_name_en: open-novel-writing
 description_zh: "|"
 description_en: "|"
 visibility: public
-disable: true
+disable: false
 ---
 
 # open-novel-writing
