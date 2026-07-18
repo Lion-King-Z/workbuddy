@@ -1,0 +1,55 @@
+{
+  "skill": "常总-资金趋势识别",
+  "tests": [
+    {
+      "prompt": "这个板块有没有放量？",
+      "expected": "should_trigger",
+      "reason": "询问量能信号。"
+    },
+    {
+      "prompt": "能不能追突破？",
+      "expected": "should_trigger",
+      "reason": "趋势与进场判断。"
+    },
+    {
+      "prompt": "资金在往哪里走？",
+      "expected": "should_trigger",
+      "reason": "资金流向判断。"
+    },
+    {
+      "prompt": "五日战法怎么用？",
+      "expected": "should_trigger",
+      "reason": "五日战法执行。"
+    },
+    {
+      "prompt": "盘面有没有重大事件提前异动？",
+      "expected": "should_trigger",
+      "reason": "重大事件提前识别。"
+    },
+    {
+      "prompt": "这个公司估值高不高？",
+      "expected": "should_not_trigger",
+      "reason": "属于估值与逆向买入 skill。"
+    },
+    {
+      "prompt": "AI算力是不是长期超级赛道？",
+      "expected": "should_not_trigger",
+      "reason": "属于赛道稀缺卡位评估 skill。"
+    },
+    {
+      "prompt": "这个票跌了20%要不要卖？",
+      "expected": "should_not_trigger",
+      "reason": "属于持有纪律与公司排雷 skill。"
+    },
+    {
+      "prompt": "帮我查一下这个板块的历史成交额。",
+      "expected": "should_not_trigger",
+      "reason": "纯数据查询。"
+    },
+    {
+      "prompt": "单日放量涨停，但随后三天量能迅速萎缩，能不能追？",
+      "expected": "edge_case",
+      "reason": "单日放量 vs 资金持续性边界情况。"
+    }
+  ]
+}
