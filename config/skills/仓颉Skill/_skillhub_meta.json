@@ -1,0 +1,9 @@
+{
+  "name": "仓颉Skill",
+  "slug": "cangjie-skill",
+  "version": "1.1.0",
+  "installedAt": 1779613577969,
+  "source": "marketplace",
+  "iconSource": "cangjie-skill",
+  "preinstalledTemplate": true
+}

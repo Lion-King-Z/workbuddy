@@ -1,0 +1,55 @@
+{
+  "skill": "常总-持有纪律与公司排雷",
+  "tests": [
+    {
+      "prompt": "这个票跌了20%要不要卖？",
+      "expected": "should_trigger",
+      "reason": "持有中遇到调整，判断是否卖出。"
+    },
+    {
+      "prompt": "周期股涨了，要不要切过去？",
+      "expected": "should_trigger",
+      "reason": "主线坚守 vs 轮动切换。"
+    },
+    {
+      "prompt": "这家公司有没有治理风险？",
+      "expected": "should_trigger",
+      "reason": "公司治理排雷。"
+    },
+    {
+      "prompt": "能不能长期持有这个公司？",
+      "expected": "should_trigger",
+      "reason": "长期持有判断。"
+    },
+    {
+      "prompt": "调整是不是趋势结束了？",
+      "expected": "should_trigger",
+      "reason": "区分调整与反转。"
+    },
+    {
+      "prompt": "这个公司估值高不高？",
+      "expected": "should_not_trigger",
+      "reason": "属于估值与逆向买入 skill。"
+    },
+    {
+      "prompt": "这个板块放量了能不能追？",
+      "expected": "should_not_trigger",
+      "reason": "属于资金趋势识别 skill。"
+    },
+    {
+      "prompt": "AI算力是不是长期超级赛道？",
+      "expected": "should_not_trigger",
+      "reason": "属于赛道稀缺卡位评估 skill。"
+    },
+    {
+      "prompt": "帮我查一下这个公司的股权质押比例。",
+      "expected": "should_not_trigger",
+      "reason": "纯数据查询。"
+    },
+    {
+      "prompt": "时代主线没结束，但公司突然更换了会计师事务所，要不要卖？",
+      "expected": "edge_case",
+      "reason": "主线未变但治理风险信号出现，需要排雷优先。"
+    }
+  ]
+}
