@@ -67,7 +67,9 @@
 - 深度研究/0629-0705: `folder_7477335037064834`
 
 - 浑水调研/0706-0712: `folder_7479461725352539`
-- 深度研究/0706-0712: `folder_7479461725353412`
+- 深度研究/0706-0712: `folder_7479461721159006`
+- 浑水调研/0713-0719: `folder_7482416524441581`
+- 深度研究/0713-0719: `folder_7482416520248108`
 
 ### ⛔ IMA同步自检铁律
 凡是写入IMA聚宝盆的产出（电话会分析、深度研究、每周研判），完成后必须跑对比：
@@ -157,6 +159,38 @@
 - Skill 版本: `ima-skills v1.1.7` 安装于 `~/.workbuddy/skills/ima-skills/`
 - 安全审计: P2 — 安全（仅访问 `ima.qq.com` / `*.myqcloud.com`，无自动执行/外送）
 
+## ⛔ IMA 工具选择规范（2026-07-12 诊断+修复）
+
+**问题**：`mcp__ima-mcp__search_knowledge` 连续第4日返回 `code:220001 参数错误`，导致紧缺度日报等任务被迫全量转 WebSearch。
+
+**根因**：不是凭证过期（`~/.config/ima/api_key` 和 `client_id` 有效），也不是网络问题。`mcp__ima-mcp` 连接器底层调用 `trpc.ima.wiki_openapi.KnowledgeOpenapi/SearchKnowledge`，该接口持续返回 220001，属于 connector 级故障/接口不兼容，短期内无法修复。
+
+**验证**：
+- `mcp__ima-mcp__search_knowledge` ❌ 任意 KB / 任意 query 都返回 `220001 参数错误`
+- `ima-skill` 的 `ima_api.cjs` 调用 `openapi/wiki/v1/search_knowledge` ✅ 返回 `code:0` 正常
+- `get_media_info` ✅ 正常（`220030` 仅表示该文件无权限/不可读）
+
+**强制规则**：
+1. **知识库搜索**一律使用 `ima-skill` 的 `ima_api.cjs` 路径：`openapi/wiki/v1/search_knowledge`
+2. **不再调用 `mcp__ima-mcp__search_knowledge`** —— 已确认不可恢复，列为禁用
+3. **读取原文**仍使用 `openapi/wiki/v1/get_media_info`，配额规则不变（单日≤10次，220021 立即停止）
+4. **便捷脚本**：`G:\锅师\config\ima_search_helper.py` 已封装，支持 `search` / `media` / `list` 三种操作
+
+**调用示例**：
+```bash
+cd /g/锅师
+python config/ima_search_helper.py search "9P9LfmFJRFwLidUrzKQu0cZZ5QMVxtv61QA9iFoV90g=" "紧缺度"
+python config/ima_search_helper.py media "<media_id>"
+python config/ima_search_helper.py list "9P9LfmFJRFwLidUrzKQu0cZZ5QMVxtv61QA9iFoV90g=" "folder_7479461725352539" "" 20
+```
+
+**错误码速查**：
+| 错误码 | 含义 | 处理 |
+|--------|------|------|
+| 220001 | 参数错误（mcp 层专属）| 弃用 mcp__ima-mcp，转 ima-skill |
+| 220021 | 日配额耗尽 | 停止 get_media_info，转 WebSearch |
+| 220030 | 权限不足/文件不可读 | 该 KB/文件不可读，跳过 |
+
 ### Skill 社区检索渠道（按优先级）
 1. **SkillsMP** (https://skillsmp.com/) — 全球最大，100万+ Skill 索引
 2. **ClawHub** (https://clawhub.ai/) — OpenClaw 官方技能市场
@@ -193,3 +227,14 @@
 - **回复中出现文件路径、URL 等可点击文本时**，后面先加空格再接标点。
 - **中文一律用全角标点**；代码、命令、英文短语、文件名、网址里的标点保持原样。
 - **法律与金融问题**：提供事实信息，而非自信的拍板推荐，并注明不是律师或理财顾问。
+
+## 产出展示铁律（2026-07-15 确立）
+
+**所有任务产出（重跑/初跑/改版），完成后必须把完整内容直接展示在聊天中。** `present_files` 只作为兜底归档入口，不能替代直接展示。
+
+| 规则 | 内容 |
+|:---|:---|
+| **强制展示** | 生成的推送/日报/研报/分析等全文直接输出到聊天 |
+| **present_files** | 仅作为文件归档确认，不替代聊天展示 |
+| **重跑/改版** | 必须全量展示新版完整内容，不能"已覆盖重写，详见文件" |
+| **适用范围** | 所有任务类型，不限投研推送
